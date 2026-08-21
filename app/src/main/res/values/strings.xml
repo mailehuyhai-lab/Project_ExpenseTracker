@@ -1,3 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ExpenseTracker</string>
+
+    <string name="app_name">Sổ Thu Chi</string>
+
+    <!-- ===== Màn hình chính ===== -->
+    <string name="chao_hoi">Xin chào 👋</string>
+    <string name="so_du_hien_tai">TỔNG SỐ DƯ</string>
+    <string name="tong_thu">Tổng thu</string>
+    <string name="tong_chi">Tổng chi</string>
+    <string name="lich_su_giao_dich">Lịch sử giao dịch</string>
+    <string name="so_luong_giao_dich">%1$d giao dịch</string>
+    <string name="them">Thêm</string>
+    <string name="mo_ta_them_giao_dich">Thêm giao dịch mới</string>
+
+    <!-- ===== Trạng thái rỗng ===== -->
+    <string name="empty_title">Chưa có giao dịch nào</string>
+    <string name="empty_subtitle">Nhấn nút “Thêm” bên dưới để ghi lại\nkhoản thu chi đầu tiên của bạn</string>
+
+    <!-- ===== Màn hình thêm giao dịch ===== -->
+    <string name="them_giao_dich">Thêm giao dịch</string>
+    <string name="nhap_so_tien">SỐ TIỀN</string>
+    <string name="don_vi_tien">đ</string>
+    <string name="hint_so_tien">0</string>
+    <string name="loai_giao_dich">Loại giao dịch</string>
+    <string name="thu_nhap">Thu nhập</string>
+    <string name="chi_tieu">Chi tiêu</string>
+    <string name="danh_muc">Danh mục</string>
+    <string name="ten_giao_dich">Tên giao dịch / Ghi chú</string>
+    <string name="hint_ten_giao_dich">VD: Cà phê với bạn, Lương tháng 8…</string>
+    <string name="helper_ten_giao_dich">Để trống sẽ tự lấy tên danh mục</string>
+    <string name="ngay_giao_dich">Ngày giao dịch</string>
+    <string name="chon_ngay">Chọn ngày giao dịch</string>
+    <string name="dinh_dang_ngay_day_du">%1$s, %2$s</string>
+    <string name="luu_giao_dich">LƯU GIAO DỊCH</string>
+    <string name="quay_lai">Quay lại</string>
+
+    <!-- ===== Thông báo ===== -->
+    <string name="msg_nhap_so_tien">Vui lòng nhập số tiền lớn hơn 0</string>
+    <string name="msg_luu_thanh_cong">Đã lưu giao dịch thành công</string>
+    <string name="msg_luu_that_bai">Lưu giao dịch thất bại, vui lòng thử lại</string>
+    <string name="msg_da_xoa">Đã xoá giao dịch</string>
+
+    <!-- ===== Hộp thoại xoá ===== -->
+    <string name="dialog_xoa_title">Xoá giao dịch?</string>
+    <string name="dialog_xoa_message">Giao dịch “%1$s” sẽ bị xoá vĩnh viễn và không thể hoàn tác.</string>
+    <string name="xoa">XOÁ</string>
+    <string name="huy">HUỶ</string>
+
+    <!-- ===== Ngày tháng ===== -->
+    <string name="hom_nay">Hôm nay</string>
+    <string name="hom_qua">Hôm qua</string>
+
+    <!-- Dòng phụ của mỗi giao dịch: "Ăn uống • Hôm nay" -->
+    <string name="dinh_dang_danh_muc_ngay">%1$s • %2$s</string>
+
 </resources>

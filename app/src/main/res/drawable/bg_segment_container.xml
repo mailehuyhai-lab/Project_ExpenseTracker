@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Nền dạng viên thuốc cho "Segmented Control" (nút chuyển Thu / Chi).
+    Nút đang được chọn sẽ nổi lên trên nền xám nhạt này.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="100dp" />
+    <solid android:color="@color/pastel_gray" />
+</shape>

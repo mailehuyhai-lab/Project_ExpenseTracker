@@ -1,5 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- ============================================================
+         1. MÀU THƯƠNG HIỆU (Teal / Emerald - sang trọng, hiện đại)
+         ============================================================ -->
+    <color name="teal_900">#064E3B</color>
+    <color name="teal_800">#065F46</color>
+    <color name="teal_700">#0F766E</color>
+    <color name="teal_600">#0D9488</color>
+    <color name="teal_500">#14B8A6</color>
+    <color name="teal_400">#2DD4BF</color>
+    <color name="emerald_500">#10B981</color>
+
+    <!-- Giữ lại tên cũ để tương thích với code/layout đã có -->
+    <color name="teal_primary">#0F766E</color>
+
+    <!-- ============================================================
+         2. MÀU NGỮ NGHĨA: THU (xanh) - CHI (đỏ/coral)
+         ============================================================ -->
+    <color name="green_income">#16A34A</color>
+    <color name="green_income_dark">#15803D</color>
+    <color name="green_income_bg">#E7F8EF</color>
+
+    <color name="red_expense">#EF4444</color>
+    <color name="red_expense_dark">#DC2626</color>
+    <color name="red_expense_bg">#FDECEC</color>
+
+    <!-- ============================================================
+         3. NỀN & CHỮ
+         ============================================================ -->
+    <color name="screen_background">#F8F9FA</color>
+    <color name="surface_white">#FFFFFF</color>
+    <color name="divider">#EEF0F2</color>
+    <color name="stroke_light">#F0F1F3</color>
+
+    <color name="text_dark">#111827</color>
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_hint">#9CA3AF</color>
+
+    <!-- Chữ / nền trong suốt dùng trên nền gradient -->
+    <color name="white_alpha_90">#E6FFFFFF</color>
+    <color name="white_alpha_70">#B3FFFFFF</color>
+    <color name="white_alpha_50">#80FFFFFF</color>
+    <color name="white_alpha_22">#38FFFFFF</color>
+    <color name="white_alpha_15">#26FFFFFF</color>
+
+    <!-- ============================================================
+         4. MÀU PASTEL CHO ICON DANH MỤC (hình tròn nhạt)
+         ============================================================ -->
+    <color name="pastel_orange">#FFEEDD</color>
+    <color name="pastel_pink">#FFE6EF</color>
+    <color name="pastel_blue">#E4EFFF</color>
+    <color name="pastel_teal">#DFF5F1</color>
+    <color name="pastel_yellow">#FFF6DC</color>
+    <color name="pastel_purple">#EFE7FF</color>
+    <color name="pastel_red">#FFE5E5</color>
+    <color name="pastel_indigo">#E8EAFF</color>
+    <color name="pastel_sky">#E1F5FE</color>
+    <color name="pastel_green">#E4F8EC</color>
+    <color name="pastel_gray">#EEF1F4</color>
+
 </resources>

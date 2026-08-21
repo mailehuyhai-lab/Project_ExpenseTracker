@@ -1,7 +1,7 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.ExpenseTracker" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-    </style>
-</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ứng dụng được thiết kế với bảng màu sáng (nền #F8F9FA + card trắng).
+    Vì vậy KHÔNG khai báo lại theme cho chế độ tối: hệ thống sẽ tự dùng
+    theme sáng ở values/ và values-v23/, đảm bảo giao diện luôn nhất quán.
+-->
+<resources />

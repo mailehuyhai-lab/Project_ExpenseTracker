@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Nền nút "Chi tiêu": đỏ khi được chọn, trong suốt khi không chọn -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/red_expense" android:state_checked="true" />
+    <item android:color="@android:color/transparent" />
+</selector>

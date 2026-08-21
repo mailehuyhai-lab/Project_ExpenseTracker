@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Hình tròn màu trắng, dùng làm nền cho icon Emoji của danh mục.
+    Màu thật sẽ được nhuộm (tint) trong Adapter theo từng danh mục.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/surface_white" />
+</shape>

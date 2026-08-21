@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    "Viên thuốc" trắng mờ, bo góc 16dp.
+    Dùng cho 2 ô Tổng thu / Tổng chi nằm bên trong card gradient.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="16dp" />
+    <solid android:color="@color/white_alpha_15" />
+</shape>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Hiệu ứng "rung" ngang - dùng để báo lỗi khi người dùng
+    chưa nhập số tiền (trực quan hơn Toast rất nhiều).
+-->
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="420"
+    android:fromXDelta="0"
+    android:interpolator="@anim/cycle_4"
+    android:toXDelta="10" />

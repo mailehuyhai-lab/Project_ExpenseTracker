@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Con trỏ nhập liệu màu trắng, dày 2dp.
+    Dùng cho ô nhập số tiền đặt trên nền gradient teal (con trỏ mặc định
+    màu teal sẽ gần như không nhìn thấy).
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <size android:width="2dp" />
+    <solid android:color="@color/surface_white" />
+</shape>
