@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    MÀN HÌNH THÊM GIAO DỊCH
+    1. Header gradient: Toolbar + ô nhập số tiền cỡ lớn (tự thêm dấu phân cách)
+    2. Tấm trắng bo góc trên: chọn Thu/Chi, Danh mục, Ghi chú, Ngày, nút Lưu
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface_white"
+    android:orientation="vertical"
+    tools:context=".AddGiaoDichActivity">
+
+    <!-- ============================================================
+         HEADER GRADIENT + Ô NHẬP SỐ TIỀN
+         ============================================================ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_gradient_header"
+        android:orientation="vertical"
+        android:paddingBottom="40dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:navigationContentDescription="@string/quay_lai"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/surface_white"
+            app:title="@string/them_giao_dich"
+            app:titleTextColor="@color/surface_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:letterSpacing="0.12"
+            android:text="@string/nhap_so_tien"
+            android:textColor="@color/white_alpha_70"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edtSoTien"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/hint_so_tien"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:maxLines="1"
+                android:textColor="@color/surface_white"
+                android:textColorHint="@color/white_alpha_50"
+                android:textCursorDrawable="@drawable/cursor_white"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                tools:ignore="LabelFor"
+                tools:text="1.500.000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/don_vi_tien"
+                android:textColor="@color/white_alpha_70"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ============================================================
+         KHU VỰC NHẬP LIỆU (tấm trắng bo góc trên, đè lên header)
+         ============================================================ -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="-28dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_sheet_top_rounded"
+        android:clipToPadding="false"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="24dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="28dp">
+
+            <!-- BƯỚC 1: LOẠI GIAO DỊCH (Segmented Control) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loai_giao_dich"
+                android:textAppearance="@style/TextAppearance.ExpenseTracker.Label" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleLoai"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_segment_container"
+                android:padding="4dp"
+                app:cornerRadius="24dp"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnThu"
+                    style="@style/Widget.ExpenseTracker.Segment"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:text="@string/thu_nhap"
+                    android:textColor="@color/selector_segment_text"
+                    app:backgroundTint="@color/selector_segment_thu_bg"
+                    app:cornerRadius="20dp"
+                    app:icon="@drawable/ic_trend_up"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
+                    app:iconTint="@color/selector_segment_text"
+                    app:strokeWidth="0dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnChi"
+                    style="@style/Widget.ExpenseTracker.Segment"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:text="@string/chi_tieu"
+                    android:textColor="@color/selector_segment_text"
+                    app:backgroundTint="@color/selector_segment_chi_bg"
+                    app:cornerRadius="20dp"
+                    app:icon="@drawable/ic_trend_down"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
+                    app:iconTint="@color/selector_segment_text"
+                    app:strokeWidth="0dp" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- BƯỚC 2: DANH MỤC (Chip tạo động theo loại) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/danh_muc"
+                android:textAppearance="@style/TextAppearance.ExpenseTracker.Label" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupDanhMuc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="8dp"
+                app:selectionRequired="true"
+                app:singleSelection="true" />
+
+            <!-- BƯỚC 3: TÊN GIAO DỊCH / GHI CHÚ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/ten_giao_dich"
+                android:textAppearance="@style/TextAppearance.ExpenseTracker.Label" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilTen"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusTopStart="16dp"
+                app:helperText="@string/helper_ten_giao_dich"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtTen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_ten_giao_dich"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapSentences"
+                    android:maxLength="80"
+                    android:maxLines="1"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- BƯỚC 4: NGÀY GIAO DỊCH (mở MaterialDatePicker) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/ngay_giao_dich"
+                android:textAppearance="@style/TextAppearance.ExpenseTracker.Label" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardNgay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/surface_white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:rippleColor="@color/pastel_teal"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:contentDescription="@string/ngay_giao_dich"
+                        android:src="@drawable/ic_calendar"
+                        app:tint="@color/teal_600" />
+
+                    <TextView
+                        android:id="@+id/tvNgay"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        tools:text="Hôm nay, 21/08/2026" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@string/chon_ngay"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/text_hint" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- BƯỚC 5: NÚT LƯU -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLuu"
+                style="@style/Widget.ExpenseTracker.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="28dp"
+                android:text="@string/luu_giao_dich"
+                app:icon="@drawable/ic_check" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

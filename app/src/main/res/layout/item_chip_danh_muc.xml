@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    MẪU CHIP DANH MỤC
+    File này được inflate bằng code trong AddGiaoDichActivity để tạo
+    động các chip theo loại giao dịch (Thu hoặc Chi).
+-->
+<com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Material3.Chip.Filter"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="@color/selector_chip_text"
+    android:textSize="13sp"
+    app:checkedIconVisible="false"
+    app:chipBackgroundColor="@color/selector_chip_bg"
+    app:chipMinHeight="40dp"
+    app:chipStrokeColor="@color/selector_chip_stroke"
+    app:chipStrokeWidth="1dp"
+    app:ensureMinTouchTargetSize="false"
+    tools:text="🍔  Ăn uống" />
