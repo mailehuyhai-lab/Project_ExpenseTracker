@@ -50,62 +50,34 @@ public class GiaoDich {
         this.createdAt = createdAt;
     }
 
-    // ------------------------- Getter / Setter -------------------------
+    // ------------------------- Getter -------------------------
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTen() {
         return ten;
     }
 
-    public void setTen(String ten) {
-        this.ten = ten;
-    }
-
     public double getSoTien() {
         return soTien;
-    }
-
-    public void setSoTien(double soTien) {
-        this.soTien = soTien;
     }
 
     public int getLoai() {
         return loai;
     }
 
-    public void setLoai(int loai) {
-        this.loai = loai;
-    }
-
     public String getDanhMuc() {
         return danhMuc;
-    }
-
-    public void setDanhMuc(String danhMuc) {
-        this.danhMuc = danhMuc;
     }
 
     public String getNgay() {
         return ngay;
     }
 
-    public void setNgay(String ngay) {
-        this.ngay = ngay;
-    }
-
     public long getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
     }
 
     // ------------------------- Tiện ích -------------------------
@@ -113,5 +85,16 @@ public class GiaoDich {
     /** @return true nếu đây là giao dịch thu nhập (tiền vào). */
     public boolean isThu() {
         return loai == LOAI_THU;
+    }
+
+    /**
+     * Tên dùng để HIỂN THỊ: nếu người dùng bỏ trống tên giao dịch
+     * thì hiển thị thay bằng tên danh mục cho dòng không bị trống.
+     */
+    public String getTenHienThi() {
+        if (ten != null && !ten.trim().isEmpty()) {
+            return ten;
+        }
+        return DanhMuc.timTheoTen(danhMuc, loai).getTen();
     }
 }

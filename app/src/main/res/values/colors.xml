@@ -28,19 +28,13 @@
     <color name="teal_400">#46E7CF</color>
     <color name="emerald_500">#12C98B</color>
 
-    <!-- Giữ lại tên cũ để tương thích với code/layout đã có -->
-    <color name="teal_primary">#0C6E6B</color>
-
     <!-- ============================================================
          2. MÀU NGỮ NGHĨA: THU (xanh) - CHI (đỏ coral)
          ============================================================ -->
     <color name="green_income">#077A4B</color>
-    <color name="green_income_dark">#05603A</color>
-    <color name="green_income_bg">#DFF7EA</color>
 
     <color name="red_expense">#D62839</color>
     <color name="red_expense_dark">#A81E2C</color>
-    <color name="red_expense_bg">#FDE3E6</color>
     <!-- Đỏ làm SÁNG cho icon/vạch trên kính tối trong thẻ số dư
          (red_expense gốc quá tối trên nền thẫm - chỉ đạt ~1.8:1) -->
     <color name="red_expense_on_dark">#FF8A94</color>
@@ -54,7 +48,6 @@
     <color name="stroke_light">#4DFFFFFF</color>
     <color name="outline_variant">#26FFFFFF</color>
 
-    <color name="text_dark">#0A1826</color>
     <color name="text_primary">#0C1B2A</color>
     <color name="text_secondary">#4A5C6E</color>
     <color name="text_hint">#7B8B9A</color>
@@ -69,7 +62,6 @@
     <color name="white_alpha_70">#B3FFFFFF</color>
     <color name="white_alpha_50">#80FFFFFF</color>
     <color name="white_alpha_22">#38FFFFFF</color>
-    <color name="white_alpha_15">#26FFFFFF</color>
 
     <!-- ============================================================
          4. KÍNH MỜ (GLASS PANELS)
@@ -98,9 +90,6 @@
     <color name="aurora_base">#061625</color>
     <color name="aurora_deep">#030D18</color>
     <color name="aurora_indigo">#2B3F9E</color>
-    <color name="aurora_violet">#6D3BD1</color>
-    <color name="aurora_magenta">#C0329B</color>
-    <color name="aurora_cyan">#1FD8C8</color>
 
     <color name="aurora_blob_cyan">#991FD8C8</color>
     <color name="aurora_blob_violet">#8C6D3BD1</color>

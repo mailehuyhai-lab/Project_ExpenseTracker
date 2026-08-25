@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     private void hienThiHopThoaiXoa(GiaoDich giaoDich, int position) {
         new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.dialog_xoa_title)
-                .setMessage(getString(R.string.dialog_xoa_message, layTenHienThi(giaoDich)))
+                .setMessage(getString(R.string.dialog_xoa_message, giaoDich.getTenHienThi()))
                 .setIcon(R.drawable.ic_delete)
                 .setNegativeButton(R.string.huy, null)
                 .setPositiveButton(R.string.xoa, (dialog, which) -> xoaGiaoDich(giaoDich, position))
@@ -176,14 +176,5 @@ public class MainActivity extends AppCompatActivity {
                 .setBackgroundTint(ContextCompat.getColor(this, R.color.text_primary))
                 .setTextColor(ContextCompat.getColor(this, R.color.surface_white))
                 .show();
-    }
-
-    /** Tên dùng để hiển thị trong hộp thoại (nếu bỏ trống thì lấy tên danh mục). */
-    private String layTenHienThi(GiaoDich giaoDich) {
-        String ten = giaoDich.getTen();
-        if (ten == null || ten.trim().isEmpty()) {
-            return DanhMuc.timTheoTen(giaoDich.getDanhMuc(), giaoDich.getLoai()).getTen();
-        }
-        return ten;
     }
 }

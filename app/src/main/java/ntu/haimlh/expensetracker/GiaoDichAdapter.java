@@ -81,9 +81,8 @@ public class GiaoDichAdapter extends RecyclerView.Adapter<GiaoDichAdapter.GiaoDi
         holder.tvIcon.setBackgroundTintList(
                 ColorStateList.valueOf(ContextCompat.getColor(context, danhMuc.getMauNen())));
 
-        // 2. Tên giao dịch (nếu rỗng thì lấy tên danh mục cho đẹp)
-        String ten = gd.getTen();
-        holder.tvTen.setText((ten == null || ten.trim().isEmpty()) ? danhMuc.getTen() : ten);
+        // 2. Tên hiển thị (model tự fallback sang tên danh mục khi tên bị trống)
+        holder.tvTen.setText(gd.getTenHienThi());
 
         // 3. Dòng phụ: "Ăn uống • Hôm nay"
         holder.tvDanhMucNgay.setText(context.getString(R.string.dinh_dang_danh_muc_ngay,
@@ -91,13 +90,10 @@ public class GiaoDichAdapter extends RecyclerView.Adapter<GiaoDichAdapter.GiaoDi
                 FormatUtils.hienThiNgayThanThien(context, gd.getNgay())));
 
         // 4. Số tiền: Thu -> "+" màu xanh, Chi -> "-" màu đỏ
-        int mauSoTien = ContextCompat.getColor(context,
-                laThu ? R.color.green_income : R.color.red_expense);
         holder.tvSoTien.setText(FormatUtils.dinhDangTienCoDau(gd.getSoTien(), laThu));
-        holder.tvSoTien.setTextColor(mauSoTien);
-        holder.tvLoai.setText(laThu
-                ? R.string.thu_nhap
-                : R.string.chi_tieu);
+        holder.tvSoTien.setTextColor(ContextCompat.getColor(context,
+                laThu ? R.color.green_income : R.color.red_expense));
+        holder.tvLoai.setText(laThu ? R.string.thu_nhap : R.string.chi_tieu);
 
         // 5. Nhấn giữ để xoá
         holder.itemView.setOnLongClickListener(v -> {

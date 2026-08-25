@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.speech.RecognizerIntent;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -79,7 +80,7 @@ public class VoiceInputHelper {
             // Người dùng đồng ý -> mở ngay hộp thoại nghe giọng nói
             moHopThoaiGiongNoi(listenerTam);
         } else {
-            ToastHelper.hien(activity, R.string.msg_thieu_quyen_micro);
+            Toast.makeText(activity, R.string.msg_thieu_quyen_micro, Toast.LENGTH_SHORT).show();
         }
         listenerTam = null;
         return true;
@@ -110,7 +111,7 @@ public class VoiceInputHelper {
         try {
             activity.startActivityForResult(intent, REQUEST_GIONG_NOI);
         } catch (ActivityNotFoundException e) {
-            ToastHelper.hien(activity, R.string.msg_khong_co_stt);
+            Toast.makeText(activity, R.string.msg_khong_co_stt, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -137,13 +138,5 @@ public class VoiceInputHelper {
         // resultCode = RESULT_CANCELED nghĩa là người dùng bấm Huỷ -> im lặng
         listenerTam = null;
         return true;
-    }
-
-    /** Tiện ích hiện Toast ngắn gọn một chỗ. */
-    private static class ToastHelper {
-        static void hien(Activity activity, int chuoiId) {
-            android.widget.Toast.makeText(activity, chuoiId,
-                    android.widget.Toast.LENGTH_SHORT).show();
-        }
     }
 }

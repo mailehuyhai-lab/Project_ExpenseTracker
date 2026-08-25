@@ -196,17 +196,6 @@ public final class VoiceParser {
         return kq;
     }
 
-    /**
-     * Chuyển một chuỗi số tiền tiếng Việt thành số nguyên.
-     * VD: "hai triệu rưỡi" -> 2 500 000; "50k" -> 50 000; "năm cành" -> 500 000.
-     *
-     * @return giá trị tìm được; 0 nếu chuỗi không chứa số tiền nào
-     */
-    public static long parseVietnameseNumber(String chuoi) {
-        String[] hoa = tachToken(chuoi)[1];
-        return timSoTien(hoa, 0).giaTri;
-    }
-
     // ==================================================================
     //  CHUẨN HOÁ VĂN BẢN
     // ==================================================================
@@ -268,83 +257,45 @@ public final class VoiceParser {
      *         hoặc {-1, 0, LOAI_KHONG_RO} nếu câu không nói thu/chi
      */
     private static int[] timTuKhoaLoai(String[] hoa) {
-        int viTri = quetMotBo(hoa, TU_KHOA_THU, Integer.MAX_VALUE);
-        viTri = quetMotBo(hoa, TU_KHOA_CHI, viTri);
+        int viTriNhat = -1;
+        int daiNhat = 0;
+        boolean laThu = false;
 
-        int doDai = 0;
-        int loai = LOAI_KHONG_RO;
-        if (viTri != Integer.MAX_VALUE) {
-            doDai = doDaiKhopTaiViTri(hoa, TU_KHOA_THU, viTri);
-            int daiChi = doDaiKhopTaiViTri(hoa, TU_KHOA_CHI, viTri);
-            if (daiChi > doDai) {
-                doDai = daiChi;
-            }
-            loai = khopBoTaiViTri(hoa, TU_KHOA_THU, viTri)
-                    ? GiaoDich.LOAI_THU : GiaoDich.LOAI_CHI;
-        }
-        return new int[]{viTri == Integer.MAX_VALUE ? -1 : viTri, doDai, loai};
-    }
-
-    /** Quét 1 bộ từ khoá, cập nhật lại vị trí sớm nhất tìm được. */
-    private static int quetMotBo(String[] hoa, String[] boTuKhoa, int viTriHienTai) {
-        for (String cum : boTuKhoa) {
-            String[] phan = cum.split(" ");
-            for (int i = 0; i <= hoa.length - phan.length; i++) {
-                boolean khop = true;
-                for (int k = 0; k < phan.length; k++) {
-                    if (!hoa[i + k].equals(phan[k])) {
-                        khop = false;
-                        break;
+        // Một lượt quét duy nhất qua cả 2 bộ: giữ vị trí SỚM NHẤT,
+        // bằng vị trí thì ưu tiên cụm DÀI HƠN
+        String[][] haiBo = {TU_KHOA_THU, TU_KHOA_CHI};
+        for (int b = 0; b < haiBo.length; b++) {
+            boolean boThu = (b == 0);
+            for (String cum : haiBo[b]) {
+                String[] phan = cum.split(" ");
+                for (int i = 0; i <= hoa.length - phan.length; i++) {
+                    if (!khopCuem(hoa, i, phan)) {
+                        continue;
+                    }
+                    if (viTriNhat < 0 || i < viTriNhat || (i == viTriNhat && phan.length > daiNhat)) {
+                        viTriNhat = i;
+                        daiNhat = phan.length;
+                        laThu = boThu;
                     }
                 }
-                if (khop && i < viTriHienTai) {
-                    viTriHienTai = i;
-                }
             }
         }
-        return viTriHienTai;
+
+        if (viTriNhat < 0) {
+            return new int[]{-1, 0, LOAI_KHONG_RO};
+        }
+        return new int[]{viTriNhat, daiNhat,
+                laThu ? GiaoDich.LOAI_THU : GiaoDich.LOAI_CHI};
     }
 
-    private static boolean khopBoTaiViTri(String[] hoa, String[] boTuKhoa, int viTri) {
-        for (String cum : boTuKhoa) {
-            String[] phan = cum.split(" ");
-            if (viTri + phan.length > hoa.length) {
-                continue;
-            }
-            boolean khop = true;
-            for (int k = 0; k < phan.length; k++) {
-                if (!hoa[viTri + k].equals(phan[k])) {
-                    khop = false;
-                    break;
-                }
-            }
-            if (khop) {
-                return true;
+    /** @return true nếu cụm {@code phan} khớp đủ các token bắt đầu tại {@code viTri}. */
+    private static boolean khopCuem(String[] hoa, int viTri, String[] phan) {
+        for (int k = 0; k < phan.length; k++) {
+            if (!hoa[viTri + k].equals(phan[k])) {
+                return false;
             }
         }
-        return false;
-    }
-
-    /** Độ dài (số token) của từ khoá DÀI NHẤT khớp ngay tại {@code viTri}. */
-    private static int doDaiKhopTaiViTri(String[] hoa, String[] boTuKhoa, int viTri) {
-        int daiNhat = 0;
-        for (String cum : boTuKhoa) {
-            String[] phan = cum.split(" ");
-            if (viTri + phan.length > hoa.length) {
-                continue;
-            }
-            boolean khop = true;
-            for (int k = 0; k < phan.length; k++) {
-                if (!hoa[viTri + k].equals(phan[k])) {
-                    khop = false;
-                    break;
-                }
-            }
-            if (khop && phan.length > daiNhat) {
-                daiNhat = phan.length;
-            }
-        }
-        return daiNhat;
+        return true;
     }
 
     // ==================================================================

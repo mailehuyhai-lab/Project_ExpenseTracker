@@ -3,6 +3,7 @@ package ntu.haimlh.expensetracker;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -137,10 +138,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
         try (Cursor cursor = db.rawQuery(sql, null)) {
-            if (cursor.moveToFirst()) {
-                do {
-                    danhSach.add(docTuCursor(cursor));
-                } while (cursor.moveToNext());
+            while (cursor.moveToNext()) {
+                danhSach.add(docTuCursor(cursor));
             }
         }
         return danhSach;
@@ -172,11 +171,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return tinhTongTheoLoai(GiaoDich.LOAI_CHI);
     }
 
-    /** @return số dư hiện tại = tổng thu - tổng chi (có thể âm). */
-    public double getSoDu() {
-        return getTongThu() - getTongChi();
-    }
-
     /**
      * Tính tổng số tiền theo loại giao dịch.
      * Dùng IFNULL để khi bảng rỗng thì SUM trả về 0 thay vì NULL.
@@ -187,23 +181,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
         try (Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(loai)})) {
-            if (cursor.moveToFirst()) {
-                return cursor.getDouble(0);
-            }
+            return cursor.moveToFirst() ? cursor.getDouble(0) : 0;
         }
-        return 0;
     }
 
     /** @return tổng số giao dịch đang có trong DB (dùng cho nhãn "n giao dịch"). */
     public int demSoGiaoDich() {
-        String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
-
-        SQLiteDatabase db = getReadableDatabase();
-        try (Cursor cursor = db.rawQuery(sql, null)) {
-            if (cursor.moveToFirst()) {
-                return cursor.getInt(0);
-            }
-        }
-        return 0;
+        return (int) DatabaseUtils.queryNumEntries(getReadableDatabase(), TABLE_NAME);
     }
 }
