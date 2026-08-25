@@ -1,5 +1,6 @@
 package ntu.haimlh.expensetracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -7,9 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -45,8 +49,12 @@ public class AddGiaoDichActivity extends AppCompatActivity {
     private MaterialCardView cardNgay;
     private TextView tvNgay;
     private View btnLuu;
+    private ImageView btnMic;
 
     private DatabaseHelper dbHelper;
+
+    /** Trợ giúp Speech-to-Text: xin quyền micro + mở hộp thoại nhận dạng giọng nói. */
+    private VoiceInputHelper voiceInputHelper;
 
     /** Loại giao dịch đang được chọn (mặc định là Chi tiêu). */
     private int loaiDangChon = GiaoDich.LOAI_CHI;
@@ -70,6 +78,7 @@ public class AddGiaoDichActivity extends AppCompatActivity {
         khoiTaoOSoTien();
         khoiTaoChonLoai();
         khoiTaoChonNgay();
+        khoiTaoNutMicro();
 
         btnLuu.setOnClickListener(v -> luuGiaoDich());
     }
@@ -83,6 +92,7 @@ public class AddGiaoDichActivity extends AppCompatActivity {
         cardNgay = findViewById(R.id.cardNgay);
         tvNgay = findViewById(R.id.tvNgay);
         btnLuu = findViewById(R.id.btnLuu);
+        btnMic = findViewById(R.id.btnMic);
     }
 
     private void khoiTaoToolbar() {
@@ -293,5 +303,92 @@ public class AddGiaoDichActivity extends AppCompatActivity {
                 .setBackgroundTint(ContextCompat.getColor(this, R.color.red_expense_dark))
                 .setTextColor(ContextCompat.getColor(this, R.color.surface_white))
                 .show();
+    }
+
+    // ==================================================================
+    //  NHẬP LIỆU BẰNG GIỌNG NÓI (VOICE INPUT)
+    //  Luồng: bấm micro -> xin quyền RECORD_AUDIO -> mở Google Speech-to-Text
+    //  -> nhận văn bản -> VoiceParser tách [Loại][Số tiền][Nội dung] -> điền UI.
+    // ==================================================================
+
+    private void khoiTaoNutMicro() {
+        voiceInputHelper = new VoiceInputHelper(this);
+        btnMic.setOnClickListener(v -> voiceInputHelper.batDauNghe(this::dienDuLieuTuGiongNoi));
+    }
+
+    /**
+     * Được gọi khi Speech-to-Text trả về văn bản. Parse rồi điền vào form:
+     * <ol>
+     *     <li>Đổi loại Thu/Chi bằng {@code toggleLoai.check()} - listener có sẵn sẽ
+     *         tự dựng lại danh mục chip tương ứng.</li>
+     *     <li>Ghi số tiền vào ô tiền (đã có TextWatcher tự thêm dấu phân cách).</li>
+     *     <li>Nếu nội dung trùng tên một danh mục thì chọn danh mục đó luôn,
+     *     ngược lại đưa vào ô "Tên giao dịch / Ghi chú".</li>
+     * </ol>
+     */
+    private void dienDuLieuTuGiongNoi(String vanBan) {
+        VoiceParser.KetQua kq = VoiceParser.parse(vanBan);
+
+        // Thiếu số tiền HOẶC loại thì không đủ dữ kiện để tự điền -> nhắc đọc lại
+        if (!kq.hopLe()) {
+            Toast.makeText(this, R.string.msg_voice_ko_hieu, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // 1. Loại giao dịch: check() phát sự kiện cho listener đã gắn ở khoiTaoChonLoai()
+        toggleLoai.check(kq.loai == GiaoDich.LOAI_THU ? R.id.btnThu : R.id.btnChi);
+        loaiDangChon = kq.loai;
+
+        // 2. Số tiền: setText dạng số thuần, TextWatcher sẽ tự thêm dấu chấm nghìn
+        dangDinhDangSoTien = false;
+        edtSoTien.setText(FormatUtils.themDauPhanCach(String.valueOf(kq.soTien)));
+
+        // 3. Nội dung: nếu trùng tên danh mục (VD nói "... tiền ăn uống") thì chọn chip,
+        //    còn lại đưa hết vào ô ghi chú. Nói "tiền ăn sáng" mà không có danh mục
+        //    "Ăn sáng" thì giữ nguyên chuỗi đẹp cho người dùng xem lại.
+        String noiDung = kq.noiDung;
+        String tenSach = noiDung.replaceFirst("(?i)^ti\\p{L}*\\s+", "");   // bỏ "tiền"/"tiền" đầu câu
+        DanhMuc dm = DanhMuc.timTheoTen(tenSach, loaiDangChon);
+        boolean trungDanhMuc = !tenSach.isEmpty()
+                && dm.getTen().equalsIgnoreCase(tenSach.trim());
+
+        if (trungDanhMuc) {
+            timVaChonChip(dm.getTen());
+            edtTen.setText("");
+        } else {
+            edtTen.setText(noiDung);
+        }
+
+        Toast.makeText(this,
+                getString(R.string.msg_voice_thanh_cong,
+                        FormatUtils.dinhDangTien(kq.soTien)),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    /** Tìm chip theo tên danh mục (tag) và tick chọn nó. */
+    private void timVaChonChip(String tenDanhMuc) {
+        for (int i = 0; i < chipGroupDanhMuc.getChildCount(); i++) {
+            Chip chip = (Chip) chipGroupDanhMuc.getChildAt(i);
+            Object tag = chip.getTag();
+            if (tag != null && tag.toString().equalsIgnoreCase(tenDanhMuc)) {
+                chip.setChecked(true);
+                return;
+            }
+        }
+    }
+
+    // Chuyển tiếp kết quả quyền + hộp thoại giọng nói về trợ giúp xử lý
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        voiceInputHelper.xuLyKetQuaXinQuyen(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        voiceInputHelper.xuLyKetQuaGiongNoi(requestCode, resultCode, data);
     }
 }

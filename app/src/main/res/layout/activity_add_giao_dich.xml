@@ -50,6 +50,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="20dp"
+            android:baselineAligned="false"
             android:gravity="bottom"
             android:orientation="horizontal">
 
@@ -71,16 +72,40 @@
                 tools:ignore="LabelFor"
                 tools:text="1.500.000" />
 
+            <!-- NÚT MICRO: nhập giao dịch bằng giọng nói -->
+            <ImageView
+                android:id="@+id/btnMic"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/bg_circle_translucent"
+                android:contentDescription="@string/mo_ta_nut_micro"
+                android:padding="9dp"
+                android:src="@drawable/ic_micro"
+                app:tint="@color/surface_white" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="2dp"
                 android:layout_marginBottom="6dp"
                 android:text="@string/don_vi_tien"
                 android:textColor="@color/white_alpha_70"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
+
+        <!-- Gợi ý mẫu câu nói để người dùng biết cách dùng -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="6dp"
+            android:alpha="0.85"
+            android:text="@string/voice_huong_dan"
+            android:textColor="@color/white_alpha_70"
+            android:textSize="11sp" />
     </LinearLayout>
 
     <!-- ============================================================

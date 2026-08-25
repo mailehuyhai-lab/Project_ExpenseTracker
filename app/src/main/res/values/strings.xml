@@ -35,6 +35,15 @@
     <string name="luu_giao_dich">LƯU GIAO DỊCH</string>
     <string name="quay_lai">Quay lại</string>
 
+    <!-- ===== Nhập liệu bằng giọng nói ===== -->
+    <string name="mo_ta_nut_micro">Nhập bằng giọng nói</string>
+    <string name="prompt_giong_noi">Nói: “chi 50k tiền ăn sáng”…</string>
+    <string name="msg_thieu_quyen_micro">Cần cấp quyền Micro để nhập bằng giọng nói</string>
+    <string name="msg_khong_co_stt">Thiết bị không có ứng dụng nhận dạng giọng nói</string>
+    <string name="voice_huong_dan">Nhấn micro rồi đọc theo mẫu:\n“chi 50k tiền ăn sáng” • “thu 100000 tiền bán gundam”</string>
+    <string name="msg_voice_ko_hieu">Chưa nhận ra số tiền hoặc loại, hãy thử đọc lại nhé</string>
+    <string name="msg_voice_thanh_cong">Đã điền %1$s từ giọng nói</string>
+
     <!-- ===== Thông báo ===== -->
     <string name="msg_nhap_so_tien">Vui lòng nhập số tiền lớn hơn 0</string>
     <string name="msg_luu_thanh_cong">Đã lưu giao dịch thành công</string>
