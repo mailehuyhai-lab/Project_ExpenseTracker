@@ -14,28 +14,17 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-/**
- * TRỢ GIÚP NHẬP LIỆU BẰNG GIỌNG NÓI.
- * <p>
- * Gói gọn toàn bộ công việc "cầu nối" giữa Activity và Google Speech-to-Text:
- * <ol>
- *     <li>Xin quyền runtime {@code RECORD_AUDIO} (Android 6.0+ phải xin khi chạy).</li>
- *     <li>Phát Intent {@link RecognizerIntent#ACTION_RECOGNIZE_SPEECH} để mở
- *         hộp thoại nhận dạng giọng nói của Google (miễn phí, không cần API key).</li>
- *     <li>Nhận kết quả về trong {@code onActivityResult} rồi gọi lại callback.</li>
- * </ol>
- */
+// Lớp này lo phần nhập bằng giọng nói: xin quyền micro,
+// mở hộp thoại Google Speech rồi đưa chữ nhận được về cho Activity
 public class VoiceInputHelper {
 
-    /** Mã request khi xin quyền RECORD_AUDIO (để đối chiếu trong onRequestPermissionsResult). */
+    // mã request để phân biệt khi nhận kết quả về
     public static final int REQUEST_QUYEN_MICRO = 9001;
-
-    /** Mã request khi mở hộp thoại Speech-to-Text (để đối chiếu trong onActivityResult). */
     public static final int REQUEST_GIONG_NOI = 9002;
 
     private final Activity activity;
 
-    /** Được gọi khi có văn bản nhận diện được (chỉ gọi khi resultCode == OK). */
+    // được gọi khi có chữ nhận dạng được
     public interface OnKetQuaListener {
         void onKetQua(String vanBan);
     }
@@ -44,13 +33,7 @@ public class VoiceInputHelper {
         this.activity = activity;
     }
 
-    // ==================================================================
-    //  1. XIN QUYỀN MICRO
-    // ==================================================================
-
-    /**
-     * Điểm vào duy nhất cho nút Micro: kiểm tra quyền -> thiếu thì xin, đủ thì mở STT.
-     */
+    // hàm chính cho nút mic: đủ quyền thì mở luôn hộp thoại, chưa có thì xin quyền
     public void batDauNghe(OnKetQuaListener listener) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -58,26 +41,19 @@ public class VoiceInputHelper {
         } else {
             ActivityCompat.requestPermissions(activity,
                     new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_QUYEN_MICRO);
-            // Lưu listener tạm để dùng tiếp trong onRequestPermissionsResult
-            listenerTam = listener;
+            listenerTam = listener;   // giữ tạm, đợi người dùng trả lời hộp thoại quyền
         }
     }
 
-    /** Listener chờ sau khi người dùng trả lời hộp thoại xin quyền. */
     private OnKetQuaListener listenerTam;
 
-    /**
-     * Activity PHẢI chuyển tiếp kết quả xin quyền vào đây
-     * (gọi từ {@code onRequestPermissionsResult}).
-     *
-     * @return true nếu đã xử lý mã request này
-     */
+    // Activity phải gọi hàm này trong onRequestPermissionsResult
     public boolean xuLyKetQuaXinQuyen(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode != REQUEST_QUYEN_MICRO) {
             return false;
         }
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // Người dùng đồng ý -> mở ngay hộp thoại nghe giọng nói
+            // được cấp quyền thì mở hộp thoại nghe luôn
             moHopThoaiGiongNoi(listenerTam);
         } else {
             Toast.makeText(activity, R.string.msg_thieu_quyen_micro, Toast.LENGTH_SHORT).show();
@@ -86,23 +62,15 @@ public class VoiceInputHelper {
         return true;
     }
 
-    // ==================================================================
-    //  2. MỞ HỘP THOẠI GOOGLE SPEECH-TO-TEXT
-    // ==================================================================
-
-    /**
-     * Phát Intent ACTION_RECOGNIZE_SPEECH tới app Google trên máy.
-     * Nếu máy KHÔNG có app nhận dạng giọng nói nào (máy ảo thường không có)
-     * thì bắt ActivityNotFoundException và thông báo thân thiện thay vì crash.
-     */
+    // mở hộp thoại nhận dạng giọng nói của Google.
+    // máy nào không có app nghe giọng nói (máy ảo thường vậy) thì hiện thông báo, đỡ bị crash
     private void moHopThoaiGiongNoi(OnKetQuaListener listener) {
         listenerTam = listener;
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        // Gợi ý cụm mẫu để engine ưu tiên các câu kiểu "chi 50k ăn sáng"
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        // Nhận dạng tiếng Việt
+        // cho nó nghe tiếng Việt
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, new Locale("vi", "VN"));
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, new Locale("vi", "VN"));
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
@@ -115,12 +83,7 @@ public class VoiceInputHelper {
         }
     }
 
-    /**
-     * Activity PHẢI chuyển tiếp kết quả hộp thoại vào đây
-     * (gọi từ {@code onActivityResult}).
-     *
-     * @return true nếu đã xử lý mã request này
-     */
+    // Activity phải gọi hàm này trong onActivityResult để nhận chữ về
     public boolean xuLyKetQuaGiongNoi(int requestCode, int resultCode, Intent data) {
         if (requestCode != REQUEST_GIONG_NOI) {
             return false;
@@ -129,7 +92,7 @@ public class VoiceInputHelper {
             ArrayList<String> ketQua = data.getStringArrayListExtra(
                     RecognizerIntent.EXTRA_RESULTS);
             if (ketQua != null && !ketQua.isEmpty() && listenerTam != null) {
-                String vanBan = ketQua.get(0);   // ứng viên khớp tốt nhất
+                String vanBan = ketQua.get(0);   // lấy câu đầu, thường khớp nhất
                 if (!vanBan.trim().isEmpty()) {
                     listenerTam.onKetQua(vanBan);
                 }

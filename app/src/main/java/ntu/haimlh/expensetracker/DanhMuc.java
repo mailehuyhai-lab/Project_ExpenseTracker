@@ -4,14 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * MODEL - Danh mục giao dịch (Category).
- * <p>
- * Mỗi danh mục gồm 3 phần: tên hiển thị, icon Emoji trực quan và
- * một màu pastel nhạt dùng làm nền hình tròn cho icon đó.
- * Danh mục được lưu vào SQLite dưới dạng TEXT (tên danh mục),
- * nên khi đọc lên chỉ cần tra cứu lại bằng {@link #timTheoTen(String, int)}.
- */
+// Class danh mục: gồm tên, icon emoji và màu nền cho icon.
+// Trong DB chỉ lưu tên danh mục thôi, cần thì tra lại bằng timTheoTen
 public class DanhMuc {
 
     private final String ten;   // VD: "Ăn uống"
@@ -36,16 +30,12 @@ public class DanhMuc {
         return mauNen;
     }
 
-    /** Chuỗi hiển thị trên Chip khi chọn danh mục. VD: "🍔  Ăn uống" */
+    // chữ hiện trên chip khi bấm chọn, ví dụ "🍔  Ăn uống"
     public String getNhanChip() {
         return icon + "  " + ten;
     }
 
-    // ==================================================================
-    //  DANH SÁCH DANH MỤC CỐ ĐỊNH
-    // ==================================================================
-
-    /** Danh mục dành cho giao dịch CHI TIÊU */
+    // hai list danh mục cố định, chi và thu khác nhau
     private static final List<DanhMuc> DS_CHI = Collections.unmodifiableList(Arrays.asList(
             new DanhMuc("Ăn uống", "🍔", R.color.pastel_orange),
             new DanhMuc("Mua sắm", "🛒", R.color.pastel_pink),
@@ -59,7 +49,6 @@ public class DanhMuc {
             new DanhMuc("Khác", "📦", R.color.pastel_gray)
     ));
 
-    /** Danh mục dành cho giao dịch THU NHẬP */
     private static final List<DanhMuc> DS_THU = Collections.unmodifiableList(Arrays.asList(
             new DanhMuc("Lương", "💸", R.color.pastel_green),
             new DanhMuc("Thưởng", "💰", R.color.pastel_yellow),
@@ -69,30 +58,24 @@ public class DanhMuc {
             new DanhMuc("Khác", "📦", R.color.pastel_gray)
     ));
 
-    /** Danh mục dự phòng khi dữ liệu cũ không khớp danh mục nào. */
+    // danh mục dự phòng khi không tìm thấy
     private static final DanhMuc MAC_DINH = new DanhMuc("Khác", "📦", R.color.pastel_gray);
 
-    /**
-     * Lấy danh sách danh mục tương ứng với loại giao dịch.
-     *
-     * @param loai {@link GiaoDich#LOAI_THU} hoặc {@link GiaoDich#LOAI_CHI}
-     */
+    // lấy list danh mục tương ứng loại thu hay chi
     public static List<DanhMuc> danhSachTheoLoai(int loai) {
         return loai == GiaoDich.LOAI_THU ? DS_THU : DS_CHI;
     }
 
-    /**
-     * Tra cứu danh mục theo tên đã lưu trong SQLite.
-     * Ưu tiên tìm trong danh sách của đúng loại giao dịch, sau đó tìm ở
-     * danh sách còn lại, cuối cùng trả về danh mục "Khác" để không bao giờ null.
-     */
+    // tìm danh mục theo tên đã lưu trong DB.
+    // tìm trong list đúng loại trước, không thấy thì sang list loại kia,
+    // vẫn không thấy thì trả về "Khác" cho chắc, đỡ bị null
     public static DanhMuc timTheoTen(String ten, int loai) {
         if (ten != null && !ten.trim().isEmpty()) {
             DanhMuc tim = timTrongDanhSach(danhSachTheoLoai(loai), ten);
             if (tim != null) {
                 return tim;
             }
-            // Tìm bổ sung ở danh sách của loại còn lại (phòng dữ liệu cũ)
+            // thử tìm thêm ở list loại còn lại
             int loaiKhac = (loai == GiaoDich.LOAI_THU) ? GiaoDich.LOAI_CHI : GiaoDich.LOAI_THU;
             tim = timTrongDanhSach(danhSachTheoLoai(loaiKhac), ten);
             if (tim != null) {
@@ -102,7 +85,7 @@ public class DanhMuc {
         return MAC_DINH;
     }
 
-    /** Tìm tuyến tính theo tên, không phân biệt hoa/thường. */
+    // duyệt list để tìm theo tên, so sánh không phân biệt hoa thường
     private static DanhMuc timTrongDanhSach(List<DanhMuc> danhSach, String ten) {
         for (DanhMuc dm : danhSach) {
             if (dm.getTen().equalsIgnoreCase(ten.trim())) {

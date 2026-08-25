@@ -30,15 +30,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-/**
- * MÀN HÌNH THÊM GIAO DỊCH.
- * <p>
- * Các điểm nổi bật:
- * - Ô nhập số tiền tự thêm dấu chấm phân cách hàng nghìn (TextWatcher).
- * - Chọn Thu/Chi bằng Segmented Control (MaterialButtonToggleGroup).
- * - Danh sách danh mục dạng Chip, tự đổi theo loại giao dịch đang chọn.
- * - Chọn ngày bằng MaterialDatePicker, mặc định là ngày hôm nay.
- */
+// Màn hình thêm giao dịch mới
 public class AddGiaoDichActivity extends AppCompatActivity {
 
     private MaterialToolbar toolbar;
@@ -53,16 +45,14 @@ public class AddGiaoDichActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
 
-    /** Trợ giúp Speech-to-Text: xin quyền micro + mở hộp thoại nhận dạng giọng nói. */
-    private VoiceInputHelper voiceInputHelper;
+    private VoiceInputHelper voiceInputHelper;   // lo phần nghe giọng nói
 
-    /** Loại giao dịch đang được chọn (mặc định là Chi tiêu). */
+    // loại đang chọn, mặc định là chi
     private int loaiDangChon = GiaoDich.LOAI_CHI;
 
-    /** Ngày đang chọn, định dạng "yyyy-MM-dd". */
-    private String ngayDangChon;
+    private String ngayDangChon;   // dạng "yyyy-MM-dd"
 
-    /** Cờ chống lặp vô hạn khi TextWatcher tự sửa nội dung ô nhập tiền. */
+    // cờ chống lặp: TextWatcher tự setText lại ô tiền thì phải bỏ qua
     private boolean dangDinhDangSoTien = false;
 
     @Override
@@ -71,7 +61,7 @@ public class AddGiaoDichActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_giao_dich);
 
         dbHelper = new DatabaseHelper(this);
-        ngayDangChon = FormatUtils.ngayHomNay();   // Mặc định: hôm nay
+        ngayDangChon = FormatUtils.ngayHomNay();   // mặc định là hôm nay
 
         anhXaView();
         khoiTaoToolbar();
@@ -99,26 +89,21 @@ public class AddGiaoDichActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
     }
 
-    // ==================================================================
-    //  Ô NHẬP SỐ TIỀN - TỰ THÊM DẤU PHÂN CÁCH HÀNG NGHÌN
-    // ==================================================================
-
+    // ô số tiền: người dùng gõ số nó tự thêm dấu chấm ngăn cách
     private void khoiTaoOSoTien() {
         edtSoTien.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Không dùng
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Không dùng
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Khi chính TextWatcher đang setText thì bỏ qua để tránh đệ quy
+                // nếu là do mình tự setText thì thôi, không sẽ lặp vô hạn
                 if (dangDinhDangSoTien) {
                     return;
                 }
@@ -128,7 +113,7 @@ public class AddGiaoDichActivity extends AppCompatActivity {
                 String daDinhDang = FormatUtils.themDauPhanCach(hienTai);
                 if (!daDinhDang.equals(hienTai)) {
                     edtSoTien.setText(daDinhDang);
-                    // Đưa con trỏ về cuối cho tự nhiên khi vừa gõ thêm số
+                    // đẩy con trỏ về cuối
                     edtSoTien.setSelection(daDinhDang.length());
                 }
 
@@ -137,31 +122,21 @@ public class AddGiaoDichActivity extends AppCompatActivity {
         });
     }
 
-    // ==================================================================
-    //  CHỌN LOẠI GIAO DỊCH (THU / CHI)
-    // ==================================================================
-
+    // nút chuyển Thu / Chi
     private void khoiTaoChonLoai() {
         toggleLoai.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (!isChecked) {
-                return;   // Chỉ xử lý nút vừa được CHỌN
+                return;   // chỉ quan tâm nút vừa được chọn
             }
             loaiDangChon = (checkedId == R.id.btnThu) ? GiaoDich.LOAI_THU : GiaoDich.LOAI_CHI;
-            taoChipDanhMuc();   // Danh mục của Thu và Chi khác nhau -> tạo lại
+            taoChipDanhMuc();   // thu và chi khác danh mục nên dựng lại chip
         });
 
-        // Gọi check() SAU khi đã gắn listener để danh mục được tạo lần đầu
+        // check sau khi gắn listener để chip được tạo ra luôn ở lần đầu
         toggleLoai.check(R.id.btnChi);
     }
 
-    // ==================================================================
-    //  DANH MỤC DẠNG CHIP
-    // ==================================================================
-
-    /**
-     * Tạo lại toàn bộ Chip danh mục theo loại giao dịch đang chọn.
-     * Chip đầu tiên được chọn sẵn để người dùng luôn có 1 danh mục hợp lệ.
-     */
+    // dựng lại các chip danh mục theo loại đang chọn, chọn sẵn cái đầu
     private void taoChipDanhMuc() {
         chipGroupDanhMuc.removeAllViews();
 
@@ -174,7 +149,7 @@ public class AddGiaoDichActivity extends AppCompatActivity {
             Chip chip = (Chip) inflater.inflate(R.layout.item_chip_danh_muc, chipGroupDanhMuc, false);
             chip.setId(View.generateViewId());
             chip.setText(dm.getNhanChip());
-            chip.setTag(dm.getTen());          // Lưu tên "thuần" để ghi vào SQLite
+            chip.setTag(dm.getTen());          // giữ tên gốc để ghi vào DB
 
             chipGroupDanhMuc.addView(chip);
 
@@ -184,7 +159,7 @@ public class AddGiaoDichActivity extends AppCompatActivity {
         }
     }
 
-    /** @return tên danh mục đang được chọn, luôn khác null. */
+    // lấy tên danh mục đang được chọn
     private String layDanhMucDangChon() {
         int checkedId = chipGroupDanhMuc.getCheckedChipId();
         if (checkedId != View.NO_ID) {
@@ -193,24 +168,18 @@ public class AddGiaoDichActivity extends AppCompatActivity {
                 return chip.getTag().toString();
             }
         }
-        // Trường hợp hiếm: không có chip nào được chọn -> lấy danh mục đầu tiên
+        // hiếm khi rơi vào đây: không chip nào chọn thì lấy cái đầu
         return DanhMuc.danhSachTheoLoai(loaiDangChon).get(0).getTen();
     }
 
-    // ==================================================================
-    //  CHỌN NGÀY GIAO DỊCH
-    // ==================================================================
-
+    // phần chọn ngày
     private void khoiTaoChonNgay() {
         capNhatHienThiNgay();
         cardNgay.setOnClickListener(v -> moHopThoaiChonNgay());
     }
 
-    /**
-     * Mở MaterialDatePicker.
-     * LƯU Ý: MaterialDatePicker làm việc với mốc thời gian theo múi giờ UTC,
-     * nên phải dùng Calendar UTC khi đọc/ghi để không bị lệch 1 ngày.
-     */
+    // mở lịch chọn ngày. lưu ý: MaterialDatePicker tính theo giờ UTC,
+    // phải dùng Calendar UTC hết nếu không sẽ lệch 1 ngày
     private void moHopThoaiChonNgay() {
         int[] ymd = tachNgay(ngayDangChon);
 
@@ -236,14 +205,14 @@ public class AddGiaoDichActivity extends AppCompatActivity {
         picker.show(getSupportFragmentManager(), "chon_ngay");
     }
 
-    /** Hiển thị dạng "Hôm nay, 21/08/2026" cho dễ đọc. */
+    // hiện dạng "Hôm nay, 21/08/2026"
     private void capNhatHienThiNgay() {
         tvNgay.setText(getString(R.string.dinh_dang_ngay_day_du,
                 FormatUtils.hienThiNgayThanThien(this, ngayDangChon),
                 FormatUtils.doiSangHienThi(ngayDangChon)));
     }
 
-    /** Tách chuỗi "yyyy-MM-dd" thành mảng {năm, tháng, ngày}. */
+    // tách "yyyy-MM-dd" thành mảng năm/tháng/ngày, lỗi thì lấy hôm nay
     private int[] tachNgay(String ngayDb) {
         try {
             String[] phan = ngayDb.split("-");
@@ -287,13 +256,13 @@ public class AddGiaoDichActivity extends AppCompatActivity {
 
         if (id > 0) {
             Toast.makeText(this, R.string.msg_luu_thanh_cong, Toast.LENGTH_SHORT).show();
-            finish();   // MainActivity sẽ tự load lại dữ liệu trong onResume()
+            finish();   // MainActivity tự load lại trong onResume
         } else {
             Toast.makeText(this, R.string.msg_luu_that_bai, Toast.LENGTH_SHORT).show();
         }
     }
 
-    /** Báo lỗi khi chưa nhập số tiền: rung ô nhập + Snackbar màu đỏ. */
+    // chưa nhập tiền thì rung ô nhập + hiện Snackbar đỏ
     private void baoLoiSoTien() {
         edtSoTien.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake));
         edtSoTien.requestFocus();
@@ -305,49 +274,35 @@ public class AddGiaoDichActivity extends AppCompatActivity {
                 .show();
     }
 
-    // ==================================================================
-    //  NHẬP LIỆU BẰNG GIỌNG NÓI (VOICE INPUT)
-    //  Luồng: bấm micro -> xin quyền RECORD_AUDIO -> mở Google Speech-to-Text
-    //  -> nhận văn bản -> VoiceParser tách [Loại][Số tiền][Nội dung] -> điền UI.
-    // ==================================================================
-
+    // nút micro: bấm là nghe giọng nói
     private void khoiTaoNutMicro() {
         voiceInputHelper = new VoiceInputHelper(this);
         btnMic.setOnClickListener(v -> voiceInputHelper.batDauNghe(this::dienDuLieuTuGiongNoi));
     }
 
-    /**
-     * Được gọi khi Speech-to-Text trả về văn bản. Parse rồi điền vào form:
-     * <ol>
-     *     <li>Đổi loại Thu/Chi bằng {@code toggleLoai.check()} - listener có sẵn sẽ
-     *         tự dựng lại danh mục chip tương ứng.</li>
-     *     <li>Ghi số tiền vào ô tiền (đã có TextWatcher tự thêm dấu phân cách).</li>
-     *     <li>Nếu nội dung trùng tên một danh mục thì chọn danh mục đó luôn,
-     *     ngược lại đưa vào ô "Tên giao dịch / Ghi chú".</li>
-     * </ol>
-     */
+    // Hàm này nhận chữ mà Google Speech trả về rồi điền vào form:
+    // VoiceParser bóc ra số tiền + loại + nội dung, thiếu cái nào là báo đọc lại
     private void dienDuLieuTuGiongNoi(String vanBan) {
         VoiceParser.KetQua kq = VoiceParser.parse(vanBan);
 
-        // Thiếu số tiền HOẶC loại thì không đủ dữ kiện để tự điền -> nhắc đọc lại
+        // thiếu số tiền hoặc loại thì chưa điền được, nhắc người dùng đọc lại
         if (!kq.hopLe()) {
             Toast.makeText(this, R.string.msg_voice_ko_hieu, Toast.LENGTH_LONG).show();
             return;
         }
 
-        // 1. Loại giao dịch: check() phát sự kiện cho listener đã gắn ở khoiTaoChonLoai()
+        // đổi loại thu/chi, listener lúc nãy sẽ tự dựng lại chip
         toggleLoai.check(kq.loai == GiaoDich.LOAI_THU ? R.id.btnThu : R.id.btnChi);
         loaiDangChon = kq.loai;
 
-        // 2. Số tiền: setText dạng số thuần, TextWatcher sẽ tự thêm dấu chấm nghìn
+        // đổ số tiền vào ô, TextWatcher sẽ tự thêm dấu chấm nghìn
         dangDinhDangSoTien = false;
         edtSoTien.setText(FormatUtils.themDauPhanCach(String.valueOf(kq.soTien)));
 
-        // 3. Nội dung: nếu trùng tên danh mục (VD nói "... tiền ăn uống") thì chọn chip,
-        //    còn lại đưa hết vào ô ghi chú. Nói "tiền ăn sáng" mà không có danh mục
-        //    "Ăn sáng" thì giữ nguyên chuỗi đẹp cho người dùng xem lại.
+        // nếu nội dung nói đúng bằng tên một danh mục thì tick chip luôn,
+        // còn lại đưa hết vào ô ghi chú cho người dùng xem lại
         String noiDung = kq.noiDung;
-        String tenSach = noiDung.replaceFirst("(?i)^ti\\p{L}*\\s+", "");   // bỏ "tiền"/"tiền" đầu câu
+        String tenSach = noiDung.replaceFirst("(?i)^ti\\p{L}*\\s+", "");   // bỏ chữ "tiền" đầu câu
         DanhMuc dm = DanhMuc.timTheoTen(tenSach, loaiDangChon);
         boolean trungDanhMuc = !tenSach.isEmpty()
                 && dm.getTen().equalsIgnoreCase(tenSach.trim());
@@ -365,7 +320,7 @@ public class AddGiaoDichActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
     }
 
-    /** Tìm chip theo tên danh mục (tag) và tick chọn nó. */
+    // tìm chip theo tên rồi tick nó lên
     private void timVaChonChip(String tenDanhMuc) {
         for (int i = 0; i < chipGroupDanhMuc.getChildCount(); i++) {
             Chip chip = (Chip) chipGroupDanhMuc.getChildAt(i);

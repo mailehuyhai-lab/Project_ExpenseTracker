@@ -14,15 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ADAPTER - Đổ dữ liệu danh sách giao dịch vào RecyclerView.
- * <p>
- * Mỗi dòng gồm: icon Emoji của danh mục (nền tròn pastel), tên giao dịch,
- * dòng phụ "Danh mục • Ngày" và số tiền có dấu +/- kèm màu tương ứng.
- */
+// Adapter cho danh sách giao dịch ở màn hình chính
 public class GiaoDichAdapter extends RecyclerView.Adapter<GiaoDichAdapter.GiaoDichViewHolder> {
 
-    /** Callback khi người dùng NHẤN GIỮ một dòng (để hiện hộp thoại xoá). */
+    // nhấn giữ 1 dòng thì báo ra ngoài (để hiện hộp thoại xoá)
     public interface OnItemLongClickListener {
         void onItemLongClick(GiaoDich giaoDich, int position);
     }
@@ -39,7 +34,7 @@ public class GiaoDichAdapter extends RecyclerView.Adapter<GiaoDichAdapter.GiaoDi
         this.longClickListener = listener;
     }
 
-    /** Thay toàn bộ dữ liệu (dùng khi load lại từ SQLite). */
+    // thay toàn bộ danh sách bằng dữ liệu mới đọc từ database
     public void capNhatDuLieu(List<GiaoDich> danhSachMoi) {
         danhSach.clear();
         if (danhSachMoi != null) {
@@ -48,11 +43,7 @@ public class GiaoDichAdapter extends RecyclerView.Adapter<GiaoDichAdapter.GiaoDi
         notifyDataSetChanged();
     }
 
-    /**
-     * Xoá 1 dòng khỏi danh sách đang hiển thị kèm hiệu ứng mượt.
-     * Dùng notifyItemRemoved thay cho notifyDataSetChanged để RecyclerView
-     * tự chạy animation trượt/mờ dần cho đúng dòng bị xoá.
-     */
+    // xoá 1 dòng, dùng notifyItemRemoved để có animation trượt chứ không nhấp nháy cả list
     public void xoaItem(int position) {
         if (position >= 0 && position < danhSach.size()) {
             danhSach.remove(position);
@@ -73,29 +64,27 @@ public class GiaoDichAdapter extends RecyclerView.Adapter<GiaoDichAdapter.GiaoDi
         GiaoDich gd = danhSach.get(position);
         boolean laThu = gd.isThu();
 
-        // 1. Tra cứu danh mục để lấy icon Emoji + màu pastel
+        // icon danh mục: nền trắng chung 1 drawable rồi tô màu theo từng danh mục
         DanhMuc danhMuc = DanhMuc.timTheoTen(gd.getDanhMuc(), gd.getLoai());
         holder.tvIcon.setText(danhMuc.getIcon());
-        // Nền tròn dùng chung 1 drawable (bg_circle màu trắng) rồi TÔ MÀU bằng tint,
-        // nhờ vậy không cần tạo 10+ file drawable cho 10+ danh mục.
         holder.tvIcon.setBackgroundTintList(
                 ColorStateList.valueOf(ContextCompat.getColor(context, danhMuc.getMauNen())));
 
-        // 2. Tên hiển thị (model tự fallback sang tên danh mục khi tên bị trống)
+        // nếu người dùng không nhập tên thì lấy tên danh mục
         holder.tvTen.setText(gd.getTenHienThi());
 
-        // 3. Dòng phụ: "Ăn uống • Hôm nay"
+        // dòng dưới: "Ăn uống • Hôm nay"
         holder.tvDanhMucNgay.setText(context.getString(R.string.dinh_dang_danh_muc_ngay,
                 danhMuc.getTen(),
                 FormatUtils.hienThiNgayThanThien(context, gd.getNgay())));
 
-        // 4. Số tiền: Thu -> "+" màu xanh, Chi -> "-" màu đỏ
+        // thu thì "+" màu xanh, chi thì "-" màu đỏ
         holder.tvSoTien.setText(FormatUtils.dinhDangTienCoDau(gd.getSoTien(), laThu));
         holder.tvSoTien.setTextColor(ContextCompat.getColor(context,
                 laThu ? R.color.green_income : R.color.red_expense));
         holder.tvLoai.setText(laThu ? R.string.thu_nhap : R.string.chi_tieu);
 
-        // 5. Nhấn giữ để xoá
+        // nhấn giữ để xoá
         holder.itemView.setOnLongClickListener(v -> {
             if (longClickListener == null) {
                 return false;
@@ -113,7 +102,6 @@ public class GiaoDichAdapter extends RecyclerView.Adapter<GiaoDichAdapter.GiaoDi
         return danhSach.size();
     }
 
-    /** ViewHolder giữ tham chiếu tới các View trong item_giao_dich.xml */
     static class GiaoDichViewHolder extends RecyclerView.ViewHolder {
 
         final TextView tvIcon;

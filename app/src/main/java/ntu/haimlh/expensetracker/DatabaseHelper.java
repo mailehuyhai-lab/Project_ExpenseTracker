@@ -10,27 +10,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * LỚP TRUY CẬP DỮ LIỆU - Quản lý cơ sở dữ liệu SQLite của ứng dụng.
- * <p>
- * Bảng "giao_dich":
- * <pre>
- * | id | ten | so_tien | loai | danh_muc | ngay | created_at |
- * </pre>
- * - loai: 1 = thu nhập, 0 = chi tiêu <br>
- * - ngay: chuỗi "yyyy-MM-dd" (sắp xếp trực tiếp bằng chuỗi được) <br>
- * - created_at: millis, dùng để sắp xếp các giao dịch trong cùng một ngày
- * <p>
- * LƯU Ý QUAN TRỌNG: không gọi db.close() sau mỗi truy vấn.
- * SQLiteOpenHelper tự giữ và tái sử dụng một kết nối duy nhất; đóng nó
- * liên tục sẽ gây chậm và có thể sinh lỗi "attempt to re-open an already-closed
- * object". Chúng ta chỉ đóng Cursor (dùng try-with-resources).
- */
+// Lớp lo toàn bộ phần SQLite của app.
+// Bảng giao_dich có các cột: id, ten, so_tien, loai (1=thu, 0=chi),
+// danh_muc, ngay ("yyyy-MM-dd"), created_at (mốc thời gian tạo).
+// Lưu ý: không cần gọi db.close(), Android tự quản giúp rồi.
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "expense_tracker.db";
 
-    /** Version 2: bổ sung 3 cột danh_muc, ngay, created_at */
+    // lên version 2 là lúc thêm 3 cột danh_muc, ngay, created_at
     private static final int DATABASE_VERSION = 2;
 
     public static final String TABLE_NAME = "giao_dich";
@@ -46,10 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    // ==================================================================
-    //  KHỞI TẠO & NÂNG CẤP BẢNG
-    // ==================================================================
-
+    // tạo bảng khi app chạy lần đầu
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTable = "CREATE TABLE " + TABLE_NAME + " ("
@@ -63,10 +48,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTable);
     }
 
-    /**
-     * Nâng cấp DB mà KHÔNG làm mất dữ liệu cũ:
-     * dùng ALTER TABLE để thêm cột mới thay vì DROP TABLE.
-     */
+    // khi nâng version thì thêm cột mới bằng ALTER TABLE,
+    // không DROP bảng vì sẽ mất hết dữ liệu người dùng
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
@@ -77,22 +60,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN "
                     + COLUMN_CREATED_AT + " INTEGER NOT NULL DEFAULT 0");
 
-            // Các giao dịch cũ chưa có ngày -> gán ngày hôm nay để vẫn hiển thị đẹp
+            // giao dịch cũ chưa có ngày thì gán tạm ngày hôm nay
             ContentValues values = new ContentValues();
             values.put(COLUMN_NGAY, FormatUtils.ngayHomNay());
             db.update(TABLE_NAME, values, COLUMN_NGAY + " = ''", null);
         }
     }
 
-    // ==================================================================
-    //  THÊM / XOÁ
-    // ==================================================================
-
-    /**
-     * Thêm một giao dịch mới.
-     *
-     * @return id vừa được sinh ra, hoặc -1 nếu thất bại.
-     */
+    // thêm 1 giao dịch, trả về id mới (nếu trả -1 là lỗi)
     public long insertGiaoDich(GiaoDich gd) {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -107,11 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_NAME, null, values);
     }
 
-    /**
-     * Xoá giao dịch theo id.
-     *
-     * @return true nếu có đúng 1 dòng bị xoá.
-     */
+    // xoá theo id
     public boolean deleteGiaoDich(int id) {
         SQLiteDatabase db = getWritableDatabase();
         int soDongBiXoa = db.delete(TABLE_NAME,
@@ -120,14 +91,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return soDongBiXoa > 0;
     }
 
-    // ==================================================================
-    //  ĐỌC DANH SÁCH
-    // ==================================================================
-
-    /**
-     * Lấy toàn bộ giao dịch, sắp xếp: ngày mới nhất trước,
-     * cùng ngày thì giao dịch nhập sau nằm trên.
-     */
+    // lấy hết giao dịch, ngày mới nhất nằm trên,
+    // cùng ngày thì thằng nhập sau đứng trên
     public List<GiaoDich> getAllGiaoDich() {
         List<GiaoDich> danhSach = new ArrayList<>();
 
@@ -145,7 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return danhSach;
     }
 
-    /** Đọc 1 dòng dữ liệu từ Cursor thành đối tượng GiaoDich. */
+    // đọc 1 dòng trong Cursor ra object GiaoDich
     private GiaoDich docTuCursor(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
         String ten = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEN));
@@ -157,24 +122,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return new GiaoDich(id, ten, soTien, loai, danhMuc, ngay, createdAt);
     }
 
-    // ==================================================================
-    //  THỐNG KÊ: TỔNG THU - TỔNG CHI - SỐ DƯ
-    // ==================================================================
-
-    /** @return tổng tiền của tất cả giao dịch THU NHẬP. */
+    // tổng tiền thu nhập
     public double getTongThu() {
         return tinhTongTheoLoai(GiaoDich.LOAI_THU);
     }
 
-    /** @return tổng tiền của tất cả giao dịch CHI TIÊU. */
+    // tổng tiền chi tiêu
     public double getTongChi() {
         return tinhTongTheoLoai(GiaoDich.LOAI_CHI);
     }
 
-    /**
-     * Tính tổng số tiền theo loại giao dịch.
-     * Dùng IFNULL để khi bảng rỗng thì SUM trả về 0 thay vì NULL.
-     */
+    // cộng tổng số tiền theo loại, IFNULL để bảng rỗng ra 0 chứ không phải null
     private double tinhTongTheoLoai(int loai) {
         String sql = "SELECT IFNULL(SUM(" + COLUMN_SO_TIEN + "), 0) FROM " + TABLE_NAME
                 + " WHERE " + COLUMN_LOAI + " = ?";
@@ -185,7 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    /** @return tổng số giao dịch đang có trong DB (dùng cho nhãn "n giao dịch"). */
+    // đếm xem đang có bao nhiêu giao dịch
     public int demSoGiaoDich() {
         return (int) DatabaseUtils.queryNumEntries(getReadableDatabase(), TABLE_NAME);
     }

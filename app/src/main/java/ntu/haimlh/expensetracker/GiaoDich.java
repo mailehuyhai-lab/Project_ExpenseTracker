@@ -1,32 +1,23 @@
 package ntu.haimlh.expensetracker;
 
-/**
- * MODEL - Đại diện cho một giao dịch thu/chi trong ứng dụng.
- * <p>
- * Mỗi đối tượng {@link GiaoDich} tương ứng với 1 dòng trong bảng SQLite "giao_dich".
- */
+// Class giao dịch: mỗi object ứng với 1 dòng trong bảng giao_dich của SQLite
 public class GiaoDich {
 
-    /** Giao dịch CHI TIÊU (tiền ra) */
-    public static final int LOAI_CHI = 0;
+    public static final int LOAI_CHI = 0;   // chi tiêu
+    public static final int LOAI_THU = 1;   // thu nhập
 
-    /** Giao dịch THU NHẬP (tiền vào) */
-    public static final int LOAI_THU = 1;
-
-    private int id;              // Khoá chính, tự tăng
-    private String ten;          // Tên / ghi chú giao dịch. VD: "Cà phê với bạn"
-    private double soTien;       // Số tiền (luôn là số dương, dấu +/- do "loai" quyết định)
+    private int id;              // khoá chính tự tăng
+    private String ten;          // tên / ghi chú, VD "Cà phê với bạn"
+    private double soTien;       // luôn dương, dấu +/- do loai quyết định
     private int loai;            // LOAI_THU hoặc LOAI_CHI
-    private String danhMuc;      // Tên danh mục. VD: "Ăn uống", "Lương"
-    private String ngay;         // Ngày giao dịch, định dạng "yyyy-MM-dd" để dễ sắp xếp
-    private long createdAt;      // Thời điểm tạo (millis) - dùng sắp xếp các giao dịch cùng ngày
+    private String danhMuc;      // VD "Ăn uống", "Lương"
+    private String ngay;         // "yyyy-MM-dd" để sắp xếp được luôn
+    private long createdAt;      // thời điểm tạo, xếp thứ tự các giao dịch cùng ngày
 
     public GiaoDich() {
     }
 
-    /**
-     * Constructor dùng khi THÊM MỚI (chưa có id vì SQLite sẽ tự sinh).
-     */
+    // thêm mới: chưa có id, SQLite tự sinh
     public GiaoDich(String ten, double soTien, int loai, String danhMuc, String ngay) {
         this.ten = ten;
         this.soTien = soTien;
@@ -36,9 +27,7 @@ public class GiaoDich {
         this.createdAt = System.currentTimeMillis();
     }
 
-    /**
-     * Constructor đầy đủ - dùng khi ĐỌC dữ liệu từ SQLite lên.
-     */
+    // đọc từ database lên (đã có id)
     public GiaoDich(int id, String ten, double soTien, int loai,
                     String danhMuc, String ngay, long createdAt) {
         this.id = id;
@@ -82,15 +71,12 @@ public class GiaoDich {
 
     // ------------------------- Tiện ích -------------------------
 
-    /** @return true nếu đây là giao dịch thu nhập (tiền vào). */
+    // có phải giao dịch thu không
     public boolean isThu() {
         return loai == LOAI_THU;
     }
 
-    /**
-     * Tên dùng để HIỂN THỊ: nếu người dùng bỏ trống tên giao dịch
-     * thì hiển thị thay bằng tên danh mục cho dòng không bị trống.
-     */
+    // tên hiện lên màn hình, nếu để trống thì lấy tên danh mục
     public String getTenHienThi() {
         if (ten != null && !ten.trim().isEmpty()) {
             return ten;

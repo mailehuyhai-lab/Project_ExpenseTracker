@@ -10,66 +10,45 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * LỚP TIỆN ÍCH - Định dạng tiền tệ và ngày tháng theo chuẩn Việt Nam.
- * <p>
- * Đặt riêng ra một lớp để tránh lặp code ở Adapter và các Activity.
- * Lớp này chỉ chứa hàm static nên được khai báo final + constructor private.
- */
+// Class chứa các hàm định dạng tiền và ngày tháng dùng chung cho cả app
 public final class FormatUtils {
 
-    /** Định dạng ngày lưu trong SQLite (sắp xếp được bằng chuỗi). */
+    // ngày lưu DB thì "yyyy-MM-dd", hiện lên màn hình thì "dd/MM/yyyy"
     public static final String PATTERN_DB = "yyyy-MM-dd";
-
-    /** Định dạng ngày hiển thị cho người dùng. */
     public static final String PATTERN_HIEN_THI = "dd/MM/yyyy";
 
     private FormatUtils() {
-        // Không cho phép khởi tạo đối tượng
     }
 
-    // ==================================================================
-    //  1. TIỀN TỆ
-    // ==================================================================
-
-    /**
-     * Tạo bộ định dạng số dùng dấu CHẤM làm dấu phân cách hàng nghìn.
-     * Không dùng Locale mặc định của máy để kết quả luôn giống nhau
-     * trên mọi thiết bị (máy cài tiếng Anh vẫn ra "150.000").
-     */
+    // bộ format số: cố tình dùng dấu CHẤM phân cách nghìn như kiểu Việt Nam,
+    // không theo locale máy (máy cài tiếng Anh sẽ ra dấu phẩy)
     private static DecimalFormat taoBoDinhDang() {
         DecimalFormatSymbols kyHieu = new DecimalFormatSymbols(Locale.US);
         kyHieu.setGroupingSeparator('.');
         return new DecimalFormat("#,##0", kyHieu);
     }
 
-    /** 150000 -> "150.000" (chỉ số, không kèm đơn vị). */
+    // 150000 -> "150.000"
     public static String dinhDangSo(double soTien) {
         return taoBoDinhDang().format(Math.abs(soTien));
     }
 
-    /** 150000 -> "150.000 đ". */
+    // 150000 -> "150.000 đ"
     public static String dinhDangTien(double soTien) {
         return dinhDangSo(soTien) + " đ";
     }
 
-    /**
-     * Định dạng tiền kèm dấu theo loại giao dịch.
-     *
-     * @param laThu true -> "+150.000 đ" (thu nhập); false -> "-150.000 đ" (chi tiêu)
-     */
+    // tiền kèm dấu: thu là "+150.000 đ", chi là "-150.000 đ"
     public static String dinhDangTienCoDau(double soTien, boolean laThu) {
         return (laThu ? "+" : "-") + dinhDangTien(soTien);
     }
 
-    /**
-     * Định dạng số dư: số dư âm sẽ có dấu trừ ở trước.
-     */
+    // số dư âm thì thêm dấu trừ phía trước
     public static String dinhDangSoDu(double soDu) {
         return (soDu < 0 ? "-" : "") + dinhDangTien(soDu);
     }
 
-    /** Bỏ mọi ký tự không phải chữ số. VD: "1.500.000 đ" -> "1500000". */
+    // bỏ hết ký tự không phải số, ví dụ "1.500.000 đ" -> "1500000"
     public static String chiLaySo(String chuoi) {
         if (chuoi == null) {
             return "";
@@ -77,37 +56,30 @@ public final class FormatUtils {
         return chuoi.replaceAll("[^0-9]", "");
     }
 
-    /**
-     * Thêm dấu chấm phân cách hàng nghìn cho chuỗi chỉ gồm chữ số.
-     * Dùng trong TextWatcher của ô nhập số tiền. VD: "1500000" -> "1.500.000".
-     */
+    // dùng trong TextWatcher ô nhập tiền: gõ "1500000" nó tự thành "1.500.000"
     public static String themDauPhanCach(String chuoiSo) {
         String so = chiLaySo(chuoiSo);
         if (so.isEmpty()) {
             return "";
         }
-        // Giới hạn 15 chữ số để không tràn kiểu long khi parse
+        // giới hạn 15 số thôi, dài quá parse long bị tràn
         if (so.length() > 15) {
             so = so.substring(0, 15);
         }
         return taoBoDinhDang().format(Long.parseLong(so));
     }
 
-    // ==================================================================
-    //  2. NGÀY THÁNG
-    // ==================================================================
-
-    /** @return ngày hôm nay theo định dạng "yyyy-MM-dd". */
+    // hôm nay dạng "yyyy-MM-dd"
     public static String ngayHomNay() {
         return new SimpleDateFormat(PATTERN_DB, Locale.US).format(new Date());
     }
 
-    /** Chuyển 3 thành phần ngày/tháng/năm thành chuỗi "yyyy-MM-dd". */
+    // ghép năm/tháng/ngày thành chuỗi "yyyy-MM-dd"
     public static String taoNgayDb(int nam, int thang, int ngay) {
         return String.format(Locale.US, "%04d-%02d-%02d", nam, thang, ngay);
     }
 
-    /** "2026-08-21" -> "21/08/2026". Nếu dữ liệu lỗi thì trả về nguyên chuỗi. */
+    // "2026-08-21" -> "21/08/2026", dữ liệu lỗi thì trả nguyên chuỗi
     public static String doiSangHienThi(String ngayDb) {
         Date date = parse(ngayDb);
         if (date == null) {
@@ -116,10 +88,7 @@ public final class FormatUtils {
         return new SimpleDateFormat(PATTERN_HIEN_THI, Locale.US).format(date);
     }
 
-    /**
-     * Hiển thị ngày thân thiện cho người dùng:
-     * "Hôm nay", "Hôm qua" hoặc "21/08/2026".
-     */
+    // hiện ngày dễ đọc: là hôm nay/hôm qua thì ghi chữ, còn lại hiện dd/MM/yyyy
     public static String hienThiNgayThanThien(Context context, String ngayDb) {
         if (ngayDb != null) {
             String homNay = ngayHomNay();
@@ -133,7 +102,7 @@ public final class FormatUtils {
         return doiSangHienThi(ngayDb);
     }
 
-    /** Cộng/trừ số ngày vào một chuỗi ngày "yyyy-MM-dd". */
+    // cộng/trừ ngày trên chuỗi "yyyy-MM-dd" (dùng để tính hôm qua)
     public static String congNgay(String ngayDb, int soNgay) {
         Date date = parse(ngayDb);
         if (date == null) {
@@ -145,12 +114,12 @@ public final class FormatUtils {
         return new SimpleDateFormat(PATTERN_DB, Locale.US).format(cal.getTime());
     }
 
-    /** Chuỗi "Tháng 8, 2026" hiển thị ở đầu màn hình chính. */
+    // dòng "Tháng 8, 2026" ở đầu màn hình chính
     public static String thangNamHienTai(Calendar cal) {
         return "Tháng " + (cal.get(Calendar.MONTH) + 1) + ", " + cal.get(Calendar.YEAR);
     }
 
-    /** Parse chuỗi "yyyy-MM-dd" thành Date, trả về null nếu sai định dạng. */
+    // chuyển chuỗi "yyyy-MM-dd" sang Date, sai định dạng thì trả null
     private static Date parse(String ngayDb) {
         if (ngayDb == null || ngayDb.trim().isEmpty()) {
             return null;
