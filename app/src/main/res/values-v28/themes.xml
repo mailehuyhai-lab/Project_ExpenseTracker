@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Từ Android 9 (API 28): nhuộm màu bóng đổ theo tông aurora thay vì
+    xám trung tính. Dưới API 28 hệ thống tự vẽ bóng đen nhạt - chấp nhận được
+    trên nền thẫm nên không cần fallback gì thêm.
+    LƯU Ý: file này ĐÈ lên values-v23/themes.xml (qualifier đặc hiệu hơn),
+    nên phải khai báo lại cả windowLightStatusBar=false tại đây.
+-->
+<resources>
+
+    <style name="Theme.ExpenseTracker" parent="Base.Theme.ExpenseTracker">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:outlineAmbientShadowColor">@color/shadow_ambient</item>
+        <item name="android:outlineSpotShadowColor">@color/shadow_spot</item>
+    </style>
+
+</resources>

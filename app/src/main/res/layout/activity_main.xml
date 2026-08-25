@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-    MÀN HÌNH CHÍNH (DASHBOARD)
-    1. Card gradient: Tổng số dư + Tổng thu + Tổng chi
-    2. Danh sách giao dịch (RecyclerView) + Empty State
-    3. Nút Extended FAB để thêm giao dịch
+    MÀN HÌNH CHÍNH (DASHBOARD) - chủ đề Aurora Glass
+    1. Thẻ số dư kính 3 lớp: aurora riêng -> kính -> nội dung
+    2. Danh sách giao dịch kính mờ + Empty State
+    3. Nút Extended FAB
 -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/screen_background"
+    android:background="@drawable/bg_aurora_backdrop"
     tools:context=".MainActivity">
 
+    <!-- clipChildren=false để viền/vệt kính tràn mép không bị cắt -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipChildren="false"
         android:orientation="vertical">
 
         <!-- ============================================================
-             CARD TỔNG QUAN - nền gradient teal, bo góc 24dp, có bóng mờ
+             THẺ SỐ DƯ KÍNH - trong suốt, bo 30dp; FrameLayout bên trong
+             xếp 2 lớp nền: aurora riêng (background) + kính (foreground)
              ============================================================ -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardTongQuan"
@@ -27,16 +30,31 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            app:cardBackgroundColor="@color/teal_700"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="8dp">
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
 
-            <LinearLayout
+            <!-- FrameLayout mang 2 lớp nền:
+                 background = mảng aurora riêng, foreground = kính + viền + vệt sáng.
+                 Dùng background/foreground thay vì View con match_parent vì
+                 View con trong FrameLayout wrap_content bị đo thành full màn hình
+                 (quirk View.getDefaultSize với AT_MOST). FrameLayout hỗ trợ
+                 foreground từ API 1 nên an toàn minSdk 21. -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_gradient_card"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:background="@drawable/bg_balance_aurora"
+                android:clipChildren="false"
+                android:foreground="@drawable/bg_glass_slab">
+
+                <!-- Nội dung -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                 <!-- Dòng chào + icon ví -->
                 <LinearLayout
@@ -65,9 +83,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:textColor="@color/white_alpha_70"
-                            android:textSize="12sp"
-                            tools:text="Tháng 8, 2026" />
+                            android:letterSpacing="0.12"
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_on_aurora_dim"
+                            android:textSize="10sp"
+                            tools:text="THÁNG 8, 2026" />
                     </LinearLayout>
 
                     <ImageView
@@ -80,14 +100,14 @@
                         app:tint="@color/surface_white" />
                 </LinearLayout>
 
-                <!-- Số dư -->
+                <!-- Nhãn "Tổng số dư" + số dư tracking âm kiểu premium -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:letterSpacing="0.12"
                     android:text="@string/so_du_hien_tai"
-                    android:textColor="@color/white_alpha_70"
+                    android:textColor="@color/text_on_aurora_dim"
                     android:textSize="11sp"
                     android:textStyle="bold" />
 
@@ -97,11 +117,20 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="-0.01"
                     android:maxLines="1"
-                    android:textColor="@color/surface_white"
-                    android:textSize="34sp"
+                    android:textColor="@color/white_alpha_90"
+                    android:textSize="40sp"
                     android:textStyle="bold"
                     tools:text="12.450.000 đ" />
+
+                <!-- Vạch accent mint "control panel" 2x44dp -->
+                <View
+                    android:layout_width="44dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_accent_rule" />
 
                 <!-- Hai ô Tổng thu / Tổng chi -->
                 <LinearLayout
@@ -126,7 +155,7 @@
                             android:layout_height="18dp"
                             android:contentDescription="@string/tong_thu"
                             android:src="@drawable/ic_trend_up"
-                            app:tint="@color/surface_white" />
+                            app:tint="@color/emerald_500" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -139,7 +168,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tong_thu"
-                                android:textColor="@color/white_alpha_70"
+                                android:textColor="@color/text_on_aurora_dim"
                                 android:textSize="11sp" />
 
                             <TextView
@@ -169,7 +198,7 @@
                             android:layout_height="18dp"
                             android:contentDescription="@string/tong_chi"
                             android:src="@drawable/ic_trend_down"
-                            app:tint="@color/surface_white" />
+                            app:tint="@color/red_expense_on_dark" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -182,7 +211,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tong_chi"
-                                android:textColor="@color/white_alpha_70"
+                                android:textColor="@color/text_on_aurora_dim"
                                 android:textSize="11sp" />
 
                             <TextView
@@ -198,7 +227,8 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
         </com.google.android.material.card.MaterialCardView>
         <!-- ============================================================
              TIÊU ĐỀ MỤC LỊCH SỬ + SỐ LƯỢNG GIAO DỊCH
@@ -219,7 +249,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/lich_su_giao_dich"
-                android:textColor="@color/text_primary"
+                android:textColor="@color/text_on_aurora"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
@@ -227,7 +257,7 @@
                 android:id="@+id/tvSoLuong"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text_on_aurora_dim"
                 android:textSize="13sp"
                 tools:text="12 giao dịch" />
         </LinearLayout>
@@ -276,7 +306,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="@string/empty_title"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/text_on_aurora"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
@@ -287,7 +317,7 @@
                     android:gravity="center"
                     android:lineSpacingExtra="3dp"
                     android:text="@string/empty_subtitle"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/text_on_aurora_dim"
                     android:textSize="13sp" />
             </LinearLayout>
         </FrameLayout>
@@ -308,5 +338,7 @@
         app:backgroundTint="@color/teal_700"
         app:elevation="8dp"
         app:icon="@drawable/ic_add"
-        app:iconTint="@color/surface_white" />
+        app:iconTint="@color/neon_mint"
+        app:rippleColor="@color/ripple_light"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.ExpenseTracker.Fab" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

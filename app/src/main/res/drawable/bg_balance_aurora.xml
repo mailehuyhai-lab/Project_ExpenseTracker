@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PLATE AURORA RIÊNG CỦA THẺ SỐ DƯ (lớp 1 trong thẻ kính)
+    Gradient chéo teal thẫm -> chàm + 2 khối sáng radial cyan / tím
+    tràn mép thẻ + vai magenta mờ ở cạnh phải.
+    Chỉ dùng thuộc tính API 1: inset left/top/right/bottom để định vị blob.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Nền thẻ -->
+    <item>
+        <shape android:shape="rectangle" android:dither="true">
+            <gradient
+                android:type="linear"
+                android:angle="315"
+                android:startColor="@color/teal_900"
+                android:centerColor="@color/teal_700"
+                android:endColor="@color/aurora_indigo" />
+        </shape>
+    </item>
+
+    <!-- Khối cyan góc trên-trái -->
+    <item
+        android:left="-60dp"
+        android:top="-70dp"
+        android:right="140dp"
+        android:bottom="120dp">
+        <shape android:shape="oval" android:dither="true">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="220dp"
+                android:startColor="@color/aurora_blob_cyan"
+                android:endColor="@color/aurora_fade_out" />
+        </shape>
+    </item>
+
+    <!-- Khối tím góc dưới-phải -->
+    <item
+        android:left="130dp"
+        android:top="70dp"
+        android:right="-110dp"
+        android:bottom="-90dp">
+        <shape android:shape="oval" android:dither="true">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="260dp"
+                android:startColor="@color/aurora_blob_violet"
+                android:endColor="@color/aurora_fade_out" />
+        </shape>
+    </item>
+
+    <!-- Vai magenta hớng nhẹ từ cạnh phải -->
+    <item
+        android:left="180dp"
+        android:top="40dp"
+        android:right="-80dp"
+        android:bottom="60dp">
+        <shape android:shape="oval" android:dither="true">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="300dp"
+                android:startColor="@color/aurora_blob_magenta"
+                android:endColor="@color/aurora_fade_out" />
+        </shape>
+    </item>
+
+</layer-list>

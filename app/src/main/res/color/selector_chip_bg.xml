@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Nền Chip danh mục: teal đậm khi chọn, trắng khi chưa chọn -->
+<!--
+    Nền Chip danh mục: teal đậm khi chọn; khi chưa chọn là xám kính nhạt
+    (surface_white cũ sẽ tàng hình trên sheet kính trắng mới).
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:color="@color/teal_700" android:state_checked="true" />
-    <item android:color="@color/surface_white" />
+    <item android:color="@color/pastel_gray" />
 </selector>

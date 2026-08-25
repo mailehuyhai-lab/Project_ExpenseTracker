@@ -8,12 +8,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface_white"
+    android:background="@drawable/bg_aurora_backdrop"
     android:orientation="vertical"
     tools:context=".AddGiaoDichActivity">
 
     <!-- ============================================================
-         HEADER GRADIENT + Ô NHẬP SỐ TIỀN
+         HEADER AURORA + Ô NHẬP SỐ TIỀN
          ============================================================ -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -255,10 +255,10 @@
                 android:layout_marginTop="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="@color/surface_white"
+                app:cardBackgroundColor="@color/glass_panel_soft"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:rippleColor="@color/pastel_teal"
+                app:rippleColor="@color/ripple_dark"
                 app:strokeColor="@color/divider"
                 app:strokeWidth="1dp">
 

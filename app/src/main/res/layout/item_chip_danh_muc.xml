@@ -13,6 +13,7 @@
     android:textSize="13sp"
     app:checkedIconVisible="false"
     app:chipBackgroundColor="@color/selector_chip_bg"
+    app:chipCornerRadius="20dp"
     app:chipMinHeight="40dp"
     app:chipStrokeColor="@color/selector_chip_stroke"
     app:chipStrokeWidth="1dp"

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Từ Android 6.0 (API 23) trở lên: màn hình chính có status bar màu sáng
-    nên icon (giờ, pin, wifi) phải chuyển sang màu tối mới đọc được.
-    Màn hình Thêm giao dịch có header teal đậm nên vẫn dùng icon trắng
-    (Theme.ExpenseTracker.Add không override thuộc tính này).
+    Từ Android 6.0 (API 23) trở lên: cả màn hình chính lẫn màn Thêm giao dịch
+    đều nằm trên nền tối (aurora thẫm / teal đậm) nên icon status bar
+    (giờ, pin, wifi) phải là màu TRẮNG mới đọc được => windowLightStatusBar=false.
 -->
 <resources>
 
     <style name="Theme.ExpenseTracker" parent="Base.Theme.ExpenseTracker">
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
 </resources>

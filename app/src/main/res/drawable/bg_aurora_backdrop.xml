@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    NỀN AURORA TOÀN MÀN HÌNH (Dashboard)
+    1 gradient chéo gốc + 3 khối sáng radial đặt tràn mép (chỉ thấy vai sáng)
+    + vignette đáy. Toàn bộ dùng thuộc tính tồn tại từ API 1:
+    định vị blob bằng inset left/top/right/bottom của layer-list
+    (KHÔNG dùng android:width/height vì chỉ có từ API 23).
+    Mỗi blob kết thúc bằng phiên bản trong suốt của CHÍNH HUỆ nó
+    (@color/aurora_fade_out) để tránh sọc xám ở vùng chuyển sắc.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Canvas gốc: xanh ngọc thẫm -> chàm -> navy -->
+    <item>
+        <shape android:shape="rectangle" android:dither="true">
+            <gradient
+                android:type="linear"
+                android:angle="315"
+                android:startColor="@color/teal_900"
+                android:centerColor="@color/aurora_indigo"
+                android:endColor="@color/aurora_base" />
+        </shape>
+    </item>
+
+    <!-- Khối sáng cyan góc trên-trái, tràn ra ngoài màn hình -->
+    <item
+        android:left="-140dp"
+        android:top="-180dp"
+        android:right="120dp"
+        android:bottom="260dp">
+        <shape android:shape="oval" android:dither="true">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="340dp"
+                android:startColor="@color/aurora_blob_cyan"
+                android:centerColor="@color/aurora_blob_violet"
+                android:endColor="@color/aurora_fade_out" />
+        </shape>
+    </item>
+
+    <!-- Khối sáng tím giữa-phải -->
+    <item
+        android:left="150dp"
+        android:top="60dp"
+        android:right="-160dp"
+        android:bottom="120dp">
+        <shape android:shape="oval" android:dither="true">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="340dp"
+                android:startColor="@color/aurora_blob_violet"
+                android:endColor="@color/aurora_fade_out" />
+        </shape>
+    </item>
+
+    <!-- Vai hống đỏ tím dưới đáy -->
+    <item
+        android:left="40dp"
+        android:top="420dp"
+        android:right="-90dp"
+        android:bottom="-220dp">
+        <shape android:shape="oval" android:dither="true">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="340dp"
+                android:startColor="@color/aurora_blob_magenta"
+                android:endColor="@color/aurora_fade_out" />
+        </shape>
+    </item>
+
+    <!-- Vignette làm đậm đáy màn hình cho nội dung nổi lên -->
+    <item>
+        <shape android:shape="rectangle" android:dither="true">
+            <gradient
+                android:type="linear"
+                android:angle="90"
+                android:startColor="@color/aurora_deep"
+                android:endColor="@color/aurora_fade_out" />
+        </shape>
+    </item>
+
+</layer-list>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Bộ điều khiển animation cho toàn bộ RecyclerView:
-    các item xuất hiện lần lượt (delay 12% thời lượng giữa các item).
+    các item xuất hiện lần lượt (delay 9% - siết lại từ 12% vì
+    mỗi item giờ dài 420ms; list dài không bị cảm giác chậm).
 -->
 <layoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
     android:animation="@anim/item_fall_down"
     android:animationOrder="normal"
-    android:delay="12%" />
+    android:delay="9%" />

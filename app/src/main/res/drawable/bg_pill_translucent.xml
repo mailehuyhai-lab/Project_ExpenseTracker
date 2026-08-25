@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    "Viên thuốc" trắng mờ, bo góc 16dp.
-    Dùng cho 2 ô Tổng thu / Tổng chi nằm bên trong card gradient.
+    PILL KÍNH TỐI trong THẺ SỐ DƯ (Tổng thu / Tổng chi):
+    tối hơn mặt thẻ nên trông như "gặm" vào tấm kính,
+    viền 1dp hai lớp lệch nhau đồng bộ cả hệ kính.
+    (bg_segment_container là track segmented riêng cho sheet trắng.)
 -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <corners android:radius="16dp" />
-    <solid android:color="@color/white_alpha_15" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:bottom="1dp" android:right="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <stroke android:width="1dp" android:color="@color/glass_edge_light" />
+        </shape>
+    </item>
+
+    <item android:top="1dp" android:left="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <stroke android:width="1dp" android:color="@color/glass_edge_shadow" />
+        </shape>
+    </item>
+
+    <item
+        android:top="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:bottom="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <solid android:color="@color/glass_panel_dark" />
+        </shape>
+    </item>
+
+</layer-list>

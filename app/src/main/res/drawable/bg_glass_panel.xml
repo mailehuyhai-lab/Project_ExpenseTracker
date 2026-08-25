@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PANEL KÍNH MỜ TRẮNG (sheet nhập liệu, plate phụ)
+    3 lớp:
+      A. Viền sáng 1dp lệch lên-trái  (mặt kính hứng sáng)
+      B. Viền tối  1dp lệch xuống-phải (bề dày kính)
+      C. Fill kính chéo + vũng sáng specula góc trên-trái +
+         đổ tối khúc xạ ở đáy, lùi vào 1dp để lộ đúng viền 2 lớp.
+    Toàn bộ thuộc tính API 1. Bo góc 28dp khớp bg_sheet_top_rounded.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- A. Ring sáng lệch lên-trái -->
+    <item android:bottom="1dp" android:right="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="28dp" />
+            <stroke android:width="1dp" android:color="@color/glass_edge_light" />
+        </shape>
+    </item>
+
+    <!-- B. Ring tối lệch xuống-phải -->
+    <item android:top="1dp" android:left="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="28dp" />
+            <stroke android:width="1dp" android:color="@color/glass_edge_shadow" />
+        </shape>
+    </item>
+
+    <!-- C. Fill kính: chéo sáng -> mờ, specula góc trên, tối ở đáy -->
+    <item
+        android:top="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:bottom="1dp">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle" android:dither="true">
+                    <corners android:radius="28dp" />
+                    <gradient
+                        android:type="linear"
+                        android:angle="315"
+                        android:startColor="@color/glass_fill_top"
+                        android:endColor="@color/glass_fill_bottom" />
+                </shape>
+            </item>
+            <item android:right="120dp" android:bottom="180dp">
+                <shape android:shape="oval" android:dither="true">
+                    <gradient
+                        android:type="radial"
+                        android:gradientRadius="200dp"
+                        android:startColor="@color/glass_sheen_center"
+                        android:endColor="@color/glass_sheen_edge" />
+                </shape>
+            </item>
+            <!-- angle 270 = trên->dưới: trong suốt ở đỉnh, đổ khúc xạ 8% ink ở đáy -->
+            <item>
+                <shape android:shape="rectangle" android:dither="true">
+                    <corners android:radius="28dp" />
+                    <gradient
+                        android:type="linear"
+                        android:angle="270"
+                        android:startColor="@color/glass_sheen_edge"
+                        android:endColor="@color/glass_inner_shadow" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+</layer-list>

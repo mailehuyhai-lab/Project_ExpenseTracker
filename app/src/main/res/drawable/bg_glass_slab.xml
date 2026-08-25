@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    LỚP KÍNH CỦA THẺ SỐ DƯ (lớp 2, đặt đè lên bg_balance_aurora):
+    fill chéo 35%->12% trắng + vũng sáng specula góc trên-trái +
+    vệt sáng quét ngang ⅓ trên (chi tiết bán "kính" nhất) +
+    đổ khúc xạ nhẹ ở đáy + viền sáng 1dp hai lớp.
+    Bo góc 30dp khớp cardCornerRadius của thẻ.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Viền sáng lệch lên-trái -->
+    <item android:bottom="1dp" android:right="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/glass_edge_light" />
+        </shape>
+    </item>
+
+    <!-- Viền tối lệch xuống-phải (bề dày kính) -->
+    <item android:top="1dp" android:left="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/glass_edge_shadow" />
+        </shape>
+    </item>
+
+    <!-- Thân kính, lùi 1dp để lộ đúng 2 viền -->
+    <item
+        android:top="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:bottom="1dp">
+        <layer-list>
+
+            <!-- Fill chéo: sáng nơi hứng sáng -->
+            <item>
+                <shape android:shape="rectangle" android:dither="true">
+                    <corners android:radius="29dp" />
+                    <gradient
+                        android:type="linear"
+                        android:angle="315"
+                        android:startColor="@color/glass_fill_top"
+                        android:endColor="@color/glass_fill_bottom" />
+                </shape>
+            </item>
+
+            <!-- Vũng specula góc trên-trái -->
+            <item android:right="110dp" android:bottom="150dp">
+                <shape android:shape="oval" android:dither="true">
+                    <gradient
+                        android:type="radial"
+                        android:gradientRadius="190dp"
+                        android:startColor="@color/glass_sheen_center"
+                        android:endColor="@color/glass_sheen_edge" />
+                </shape>
+            </item>
+
+            <!-- Vệt sáng quét ngang ⅓ trên -->
+            <item android:top="14dp" android:left="-40dp" android:right="-40dp" android:bottom="190dp">
+                <shape android:shape="rectangle" android:dither="true">
+                    <corners android:radius="29dp" />
+                    <gradient
+                        android:type="linear"
+                        android:angle="315"
+                        android:startColor="@color/glass_sheen_edge"
+                        android:centerColor="@color/glass_sheen_streak"
+                        android:endColor="@color/glass_sheen_edge" />
+                </shape>
+            </item>
+
+            <!-- Đổ khúc xạ 8% ink ở đáy -->
+            <item>
+                <shape android:shape="rectangle" android:dither="true">
+                    <corners android:radius="29dp" />
+                    <gradient
+                        android:type="linear"
+                        android:angle="270"
+                        android:startColor="@color/glass_sheen_edge"
+                        android:endColor="@color/glass_inner_shadow" />
+                </shape>
+            </item>
+
+        </layer-list>
+    </item>
+
+</layer-list>

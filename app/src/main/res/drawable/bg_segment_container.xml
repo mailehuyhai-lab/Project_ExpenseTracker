@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Nền dạng viên thuốc cho "Segmented Control" (nút chuyển Thu / Chi).
-    Nút đang được chọn sẽ nổi lên trên nền xám nhạt này.
+    TRACK SEGMENTED CONTROL Thu/Chi - nằm trên sheet kính TRẮNG
+    (không phải trong thẻ tối), nên dùng track sáng tinh giãn:
+    pastel_gray + viền hairline, để nút chưa chọn đọc rõ.
+    (Nút được chọn vẫn fill green_income / red_expense đặc -
+    xem selector_segment_thu_bg / selector_segment_chi_bg.)
 -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <corners android:radius="100dp" />
-    <solid android:color="@color/pastel_gray" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="100dp" />
+            <solid android:color="@color/pastel_gray" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/outline_variant" />
+        </shape>
+    </item>
+</layer-list>

@@ -15,6 +15,15 @@
         <item name="colorSecondary">@color/teal_600</item>
         <item name="colorOnSecondary">@color/surface_white</item>
 
+        <!-- Container / tertiary: ánh xạ đủ để không còn màu mặc định (tím) của M3 lộ ra -->
+        <item name="colorSecondaryContainer">@color/pastel_teal</item>
+        <item name="colorOnSecondaryContainer">@color/teal_900</item>
+        <item name="colorTertiary">@color/teal_600</item>
+        <item name="colorOnTertiary">@color/surface_white</item>
+        <item name="colorTertiaryContainer">@color/pastel_indigo</item>
+        <item name="colorOnTertiaryContainer">@color/teal_900</item>
+        <item name="colorOutlineVariant">@color/outline_variant</item>
+
         <!-- Bề mặt & chữ -->
         <item name="colorSurface">@color/surface_white</item>
         <item name="colorOnSurface">@color/text_primary</item>
@@ -26,6 +35,9 @@
 
         <!-- Thanh trạng thái cùng màu nền để giao diện liền mạch -->
         <item name="android:statusBarColor">@color/screen_background</item>
+
+        <!-- Nền cửa sổ = aurora thẫm: hết chớp trắng khi mở app/cuộn nhanh -->
+        <item name="android:windowBackground">@color/screen_background</item>
 
         <!-- Mọi hộp thoại trong app đều bo góc lớn -->
         <item name="alertDialogStyle">@style/MaterialAlertDialog.ExpenseTracker</item>
@@ -66,6 +78,14 @@
 
     <style name="Widget.ExpenseTracker.Dialog.Button.Neutral" parent="Widget.Material3.Button.TextButton.Dialog">
         <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <!-- ============================================================
+         BO GÓC EXTENDED FAB (Dashboard)
+         ============================================================ -->
+    <style name="ShapeAppearance.ExpenseTracker.Fab" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
     </style>
 
     <!-- ============================================================
